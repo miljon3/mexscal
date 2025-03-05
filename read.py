@@ -1,4 +1,4 @@
 import pandas
-df = pandas.read_excel('asek.xlsx')
+df = pandas.read_excel('ASEK/A3_2.xlsx')
 
 print(df)
