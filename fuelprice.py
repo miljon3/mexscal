@@ -4,12 +4,15 @@ class FuelPrice:
     def __init__(fuel):
         fuel.df = pandas.read_excel('ASEK/A3_2.xlsx')
     
-    def fuel_price(fuel, year):
-        # Create a new dataframe and key it by year, then select just the relevant price data.
+    # 2019 should be set as default year in all places.
+    def fuel_price(fuel, year = 2019):
+        # Create a new dataframe and key it by year, then select the relevant data and export is as variables.
         df = fuel.df[year]
-        eDf = df.iloc[[7,8]]
-        return eDf
+        fuel = df.iloc[8]
+        tax = df.iloc[7]
+        return fuel, tax
 
 fuelprice = FuelPrice()
-print(fuelprice.fuel_price(2019))
+# Leave () empty to use 2019, specify other years.
+print(fuelprice.fuel_price())
 
