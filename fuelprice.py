@@ -1,8 +1,8 @@
-import pandas
+import pandas as pd
 
 class FuelPrice:
     def __init__(fuel):
-        fuel.df = pandas.read_excel('ASEK/A3_2.xlsx')
+        fuel.df = pd.read_excel('ASEK/A3_2.xlsx')
     
     # 2019 should be set as default year in all places.
     def fuel_price(fuel, year = 2019):
