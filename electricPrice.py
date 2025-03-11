@@ -14,6 +14,7 @@ class ElectricPrice:
         ldElectric = df.iloc[10]/100
         return regionalElectric, ldElectric
     
+    # Using approximate figure for consumption, should use actual consumption in the future.
     def get_kilometer_price(self, year = 2019, consumption = 1.4):
         regionalElectric, ldElectric = self.get_price(year)
         return consumption * (regionalElectric + ldElectric)/2

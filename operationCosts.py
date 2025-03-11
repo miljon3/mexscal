@@ -10,13 +10,13 @@ ep = electricPrice.ElectricPrice()
 
 print(fp.get_kilometer_price(), ep.get_kilometer_price())
 
-# Put the kilometer price from fuel and electricity into a dictionary.
+# Put the kilometer price from fuel and electricity into a dictionary to compare them.
 kilometer_prices = {
     'ICE': fp.get_kilometer_price(),
     'BET': ep.get_kilometer_price()
 }
 
-# Create a dataframe with the kilometer prices.
+# Create a dataframe from the dictionary
 df = pd.DataFrame(kilometer_prices, index = ["Kr/km"])
 
 print(df)
