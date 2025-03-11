@@ -12,10 +12,13 @@ class ElectricPrice:
         # Converting öre/kWh to kr/kWh
         regionalElectric = df.iloc[4]/100
         ldElectric = df.iloc[10]/100
-        eTax = df.iloc[3]/100
-        return regionalElectric, ldElectric, eTax
+        return regionalElectric, ldElectric
+    
+    def get_kilometer_price(self, year = 2019, consumption = 1.4):
+        regionalElectric, ldElectric = self.get_price(year)
+        return consumption * (regionalElectric + ldElectric)/2
 
 electricPrice = ElectricPrice()
 # Leave () empty to use 2019, specify other years.
-print(electricPrice.get_price())
+print(electricPrice.get_kilometer_price())
 
