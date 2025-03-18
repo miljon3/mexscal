@@ -1,0 +1,47 @@
+{
+    "cost_tires":{
+        "value":2657.812,
+        "name":"Tire Cost",
+        "unit":"Kr"
+    },
+    "cost_depot_electricity":{
+        "value":1.81,
+        "name":"Depot Electricity Cost",
+        "unit":"Kr\/kWh"
+    },
+    "cost_public_electricity":{
+        "value":5.625,
+        "name":"Public Electricity Cost",
+        "unit":"Kr\/kWh"
+    },
+    "cost_driver_hourly":{
+        "value":339.9,
+        "name":"Driver Hourly Cost",
+        "unit":"Kr\/h"
+    },
+    "lifespan":{
+        "value":6,
+        "name":"Lifespan",
+        "unit":"years"
+    },
+    "interest_rate":{
+        "value":0.06,
+        "name":"Interest Rate",
+        "unit":"%"
+    },
+    "remaining_value":{
+        "value":0.351,
+        "name":"Remaining Value",
+        "unit":"%"
+    },
+    "yearly_depreciation":{
+        "value":0.225,
+        "name":"Yearly Depreciation",
+        "unit":"%"
+    },
+    "distance_deprecation":{
+        "value":2.0,
+        "name":"Distance Depreciation",
+        "unit":""
+    }
+}
