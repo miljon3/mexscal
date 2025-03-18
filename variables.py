@@ -16,7 +16,7 @@ class VariableManager:
             "interest_rate": {"value": 0.06, "name": "Interest Rate", "unit": "%"},
             "remaining_value": {"value": 0.3, "name": "Remaining Value", "unit": "%"},
             "yearly_depreciation": {"value": 0.3, "name": "Yearly Depreciation", "unit": "%"},
-            "distance_deprecation": {"value": 0.0, "name": "Distance Depreciation", "unit": ""}
+            "distance_deprecation": {"value": 0.0, "name": "Distance related depreciation", "unit": "%/km"}
         }
         self.load_variables()
     

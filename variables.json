@@ -5,7 +5,7 @@
         "unit":"Kr"
     },
     "cost_depot_electricity":{
-        "value":1.81,
+        "value":1.357,
         "name":"Depot Electricity Cost",
         "unit":"Kr\/kWh"
     },
@@ -30,18 +30,18 @@
         "unit":"%"
     },
     "remaining_value":{
-        "value":0.351,
+        "value":0.263,
         "name":"Remaining Value",
         "unit":"%"
     },
     "yearly_depreciation":{
-        "value":0.225,
+        "value":0.169,
         "name":"Yearly Depreciation",
         "unit":"%"
     },
     "distance_deprecation":{
         "value":2.0,
-        "name":"Distance Depreciation",
-        "unit":""
+        "name":"Distance related depreciation",
+        "unit":"%\/km"
     }
 }

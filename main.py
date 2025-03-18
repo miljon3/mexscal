@@ -7,7 +7,7 @@ from variables import VariableManager, open_variable_editor_in_main_window
 # Initialize main application window
 root = tk.Tk()
 root.title("Main Application")
-root.geometry("1200x800")
+root.geometry("1200x1000")
 
 # Set modern font and colors
 root.config(bg="#f7f7f7")
