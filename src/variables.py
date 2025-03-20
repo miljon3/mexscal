@@ -16,7 +16,14 @@ class VariableManager:
             "interest_rate": {"value": 0.06, "name": "Interest Rate", "unit": "%"},
             "remaining_value": {"value": 0.3, "name": "Remaining Value", "unit": "%"},
             "yearly_depreciation": {"value": 0.3, "name": "Yearly Depreciation", "unit": "%"},
-            "distance_deprecation": {"value": 0.0, "name": "Distance related depreciation", "unit": "%/km"}
+            "distance_deprecation": {"value": 0.0, "name": "Distance related depreciation", "unit": "%/km"},
+            "pfcr": {"value": 0.6, "name": "Fraction of energy charged at public fast chargers", "unit": "%"},
+            "dcr": {"value": 0.4, "name": "Fraction of energy charged at depot chargers", "unit": "%"},
+            "bc": {"value": 500, "name": "Battery capacity", "unit": "kWh"},
+            "ccph_fast": {"value": 0.5, "name": "Charging infrastructure cost per kWh for public fast chargers", "unit": "Kr/kWh"},
+            "ccph_slow": {"value": 0.2, "name": "Charging infrastructure cost per kWh for depot chargers", "unit": "Kr/kWh"},
+            "r": {"value": 300, "name": "Range of the vehicle per full charge", "unit": "km"},
+            "akm": {"value": 50000, "name": "Annual kilometers driven over", "unit": "km"}
         }
         self.load_variables()
     

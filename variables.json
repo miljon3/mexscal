@@ -1,16 +1,16 @@
 {
     "cost_tires":{
-        "value":2657.812,
+        "value":6300,
         "name":"Tire Cost",
         "unit":"Kr"
     },
     "cost_depot_electricity":{
-        "value":1.357,
+        "value":2.263,
         "name":"Depot Electricity Cost",
         "unit":"Kr\/kWh"
     },
     "cost_public_electricity":{
-        "value":5.625,
+        "value":7.5,
         "name":"Public Electricity Cost",
         "unit":"Kr\/kWh"
     },
@@ -20,7 +20,7 @@
         "unit":"Kr\/h"
     },
     "lifespan":{
-        "value":6,
+        "value":6.0,
         "name":"Lifespan",
         "unit":"years"
     },
@@ -30,18 +30,53 @@
         "unit":"%"
     },
     "remaining_value":{
-        "value":0.263,
+        "value":0.3,
         "name":"Remaining Value",
         "unit":"%"
     },
     "yearly_depreciation":{
-        "value":0.169,
+        "value":0.3,
         "name":"Yearly Depreciation",
         "unit":"%"
     },
     "distance_deprecation":{
-        "value":2.0,
+        "value":0.0,
         "name":"Distance related depreciation",
         "unit":"%\/km"
+    },
+    "pfcr":{
+        "value":0.625,
+        "name":"Fraction of energy charged at public fast chargers",
+        "unit":"%"
+    },
+    "dcr":{
+        "value":0.5,
+        "name":"Fraction of energy charged at depot chargers",
+        "unit":"%"
+    },
+    "bc":{
+        "value":1258.85,
+        "name":"Battery capacity",
+        "unit":"kWh"
+    },
+    "ccph_fast":{
+        "value":0.625,
+        "name":"Charging infrastructure cost per kWh for public fast chargers",
+        "unit":"Kr\/kWh"
+    },
+    "ccph_slow":{
+        "value":0.2,
+        "name":"Charging infrastructure cost per kWh for depot chargers",
+        "unit":"Kr\/kWh"
+    },
+    "r":{
+        "value":686.644,
+        "name":"Range of the vehicle per full charge",
+        "unit":"km"
+    },
+    "akm":{
+        "value":62500.0,
+        "name":"Annual kilometers driven over",
+        "unit":"km"
     }
 }

@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import font
 from variables import VariableManager, open_variable_editor_in_main_window
-
-# ChatGPT used to add style and layout to the application
+from tco import open_tco_page
 
 # Initialize main application window
 root = tk.Tk()
@@ -19,17 +18,16 @@ var_manager = VariableManager()
 # Function to display content in the main area
 def display_content(content_type):
     # Clear existing widgets in the content frame
-    for widget in content_frame.winfo_children():
+    for widget in scrollable_frame.winfo_children():
         widget.destroy()
 
     if content_type == "homepage":
-        label = tk.Label(content_frame, text="This is the Homepage", font=(modern_font, 14), bg="#f7f7f7")
+        label = tk.Label(scrollable_frame, text="This is the Homepage", font=(modern_font, 14), bg="#f7f7f7")
         label.pack(pady=20)
     elif content_type == "variable_editor":
-        open_variable_editor_in_main_window(content_frame, var_manager)  # Show in main window
+        open_variable_editor_in_main_window(scrollable_frame, var_manager)  # Show in main window
     elif content_type == "tco":
-        label = tk.Label(content_frame, text="Total Cost of Ownership (TCO) Analysis", font=(modern_font, 14), bg="#f7f7f7")
-        label.pack(pady=20)
+        open_tco_page(scrollable_frame, var_manager)  # Show TCO page in main window
 
 # Set modern font and layout
 modern_font = font.nametofont("TkDefaultFont")
@@ -68,9 +66,27 @@ def on_enter(event):
 def on_leave(event):
     event.widget.config(bg="#4CAF50")  # Original green on leave
 
-# Main content frame
+# Create a frame for the main content with a scrollbar
 content_frame = tk.Frame(root, bg="#f7f7f7")
 content_frame.pack(side="left", expand=True, fill="both")
+
+# Create a canvas to add a scrollbar
+canvas = tk.Canvas(content_frame, bg="#f7f7f7")
+scrollbar = tk.Scrollbar(content_frame, orient="vertical", command=canvas.yview)
+scrollable_frame = tk.Frame(canvas, bg="#f7f7f7")
+
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(
+        scrollregion=canvas.bbox("all")
+    )
+)
+
+canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+canvas.configure(yscrollcommand=scrollbar.set)
+
+canvas.pack(side="left", fill="both", expand=True)
+scrollbar.pack(side="right", fill="y")
 
 # Initialize content to be displayed
 display_content("homepage")  # Default content is the homepage
