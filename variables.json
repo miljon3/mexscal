@@ -5,7 +5,7 @@
         "unit":"Kr"
     },
     "cost_depot_electricity":{
-        "value":2.263,
+        "value":2.829,
         "name":"Depot Electricity Cost",
         "unit":"Kr\/kWh"
     },
@@ -55,7 +55,7 @@
         "unit":"%"
     },
     "bc":{
-        "value":1258.85,
+        "value":373.414,
         "name":"Battery capacity",
         "unit":"kWh"
     },
@@ -70,7 +70,7 @@
         "unit":"Kr\/kWh"
     },
     "r":{
-        "value":686.644,
+        "value":162.944,
         "name":"Range of the vehicle per full charge",
         "unit":"km"
     },

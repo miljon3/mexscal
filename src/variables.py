@@ -56,32 +56,44 @@ def open_variable_editor_in_main_window(root, var_manager):
         widget.destroy()
 
     entries = {}
+    row = 0
+    col = 0
+    max_columns = 3
+
+    field_width = 15
+
     for var_name, info in var_manager.variables.items():
         frame = tk.Frame(root)
-        frame.pack(pady=5, padx=10, fill='x')
-        
+        frame.grid(row=row, column=col, padx=10, pady=5, sticky="w")
+
         label_var = tk.StringVar()
         label_var.set(f"{info['name']}: {info['value']} {info['unit']}")
-        label = tk.Label(frame, textvariable=label_var)
-        label.pack(anchor='w')
-        
-        entry = tk.Entry(frame)
-        entry.pack(fill='x', padx=5)
+        label = tk.Label(frame, textvariable=label_var, anchor="w", width=field_width*2)  # Fixed width
+        label.grid(row=0, column=0, columnspan=3, sticky="w")
+
+        entry = tk.Entry(frame, width=field_width)
+        entry.grid(row=1, column=0, columnspan=3, padx=5, sticky="ew")
         entry.insert(0, str(info['value']))
-        
+
         button_frame = tk.Frame(frame)
-        button_frame.pack(pady=2, fill='x')
-        
-        button_minus_25 = tk.Button(button_frame, text="-25%", command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 0.75))
+        button_frame.grid(row=2, column=0, columnspan=3, sticky="ew")
+
+        button_minus_25 = tk.Button(button_frame, text="-25%", width=5, command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 0.75))
         button_minus_25.pack(side='left', expand=True, padx=2)
-        
-        button_update = tk.Button(button_frame, text="Update", command=lambda v=var_name, e=entry, lv=label_var: handle_update(v, e, lv, var_manager))
+
+        button_update = tk.Button(button_frame, text="Update", width=8, command=lambda v=var_name, e=entry, lv=label_var: handle_update(v, e, lv, var_manager))
         button_update.pack(side='left', expand=True, padx=2)
-        
-        button_plus_25 = tk.Button(button_frame, text="+25%", command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 1.25))
+
+        button_plus_25 = tk.Button(button_frame, text="+25%", width=5, command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 1.25))
         button_plus_25.pack(side='left', expand=True, padx=2)
-        
+
         entries[var_name] = (entry, label_var)
+
+        col += 1
+        if col >= max_columns:
+            col = 0
+            row += 1
+
 
 def handle_update(var_name, entry_field, label_var, var_manager):
     if var_manager.update_variable(var_name, entry_field.get()):
