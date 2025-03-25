@@ -1,3 +1,5 @@
+# Module for calculating costs related to charging.
+
 def calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_slow, r):
     """
     Calculate the charging infrastructure cost per kilometre (CIC_KM)

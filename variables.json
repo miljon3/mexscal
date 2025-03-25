@@ -55,7 +55,7 @@
         "unit":"%"
     },
     "bc":{
-        "value":373.414,
+        "value":583.459,
         "name":"Battery capacity",
         "unit":"kWh"
     },
@@ -70,7 +70,7 @@
         "unit":"Kr\/kWh"
     },
     "r":{
-        "value":162.944,
+        "value":497.265,
         "name":"Range of the vehicle per full charge",
         "unit":"km"
     },
