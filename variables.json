@@ -1,19 +1,4 @@
 {
-    "cost_tires":{
-        "value":6300,
-        "name":"Tire Cost",
-        "unit":"Kr"
-    },
-    "cost_depot_electricity":{
-        "value":2.829,
-        "name":"Depot Electricity Cost",
-        "unit":"Kr\/kWh"
-    },
-    "cost_public_electricity":{
-        "value":7.5,
-        "name":"Public Electricity Cost",
-        "unit":"Kr\/kWh"
-    },
     "cost_driver_hourly":{
         "value":339.9,
         "name":"Driver Hourly Cost",
@@ -45,32 +30,32 @@
         "unit":"%\/km"
     },
     "pfcr":{
-        "value":0.625,
+        "value":0.05,
         "name":"Fraction of energy charged at public fast chargers",
         "unit":"%"
     },
     "dcr":{
-        "value":0.5,
+        "value":0.95,
         "name":"Fraction of energy charged at depot chargers",
         "unit":"%"
     },
     "bc":{
-        "value":583.459,
+        "value":524.0,
         "name":"Battery capacity",
         "unit":"kWh"
     },
     "ccph_fast":{
-        "value":0.625,
+        "value":4.0,
         "name":"Charging infrastructure cost per kWh for public fast chargers",
         "unit":"Kr\/kWh"
     },
     "ccph_slow":{
-        "value":0.2,
+        "value":1.0,
         "name":"Charging infrastructure cost per kWh for depot chargers",
         "unit":"Kr\/kWh"
     },
     "r":{
-        "value":497.265,
+        "value":465.0,
         "name":"Range of the vehicle per full charge",
         "unit":"km"
     },
@@ -78,5 +63,35 @@
         "value":62500.0,
         "name":"Annual kilometers driven over",
         "unit":"km"
+    },
+    "dcur":{
+        "value":0.5,
+        "name":"Utilisation of depot charger",
+        "unit":"%"
+    },
+    "fleet_size":{
+        "value":1,
+        "name":"Fleet size",
+        "unit":""
+    },
+    "truck_cost":{
+        "value":1400000.0,
+        "name":"Truck cost",
+        "unit":"Kr"
+    },
+    "battery_cost_per_kWh":{
+        "value":2500.0,
+        "name":"Battery cost per kWh",
+        "unit":"Kr\/kWh"
+    },
+    "mcpkm":{
+        "value":0.98,
+        "name":"Maintenance cost per km",
+        "unit":"Kr\/km"
+    },
+    "subsidy":{
+        "value":0.2,
+        "name":"Subsidy",
+        "unit":"%"
     }
 }

@@ -8,9 +8,6 @@ class VariableManager:
     
     def __init__(self):
         self.variables = {
-            "cost_tires": {"value": 6300, "name": "Tire Cost", "unit": "Kr"},
-            "cost_depot_electricity": {"value": 1.81, "name": "Depot Electricity Cost", "unit": "Kr/kWh"},
-            "cost_public_electricity": {"value": 6.00, "name": "Public Electricity Cost", "unit": "Kr/kWh"},
             "cost_driver_hourly": {"value": 339.9, "name": "Driver Hourly Cost", "unit": "Kr/h"},
             "lifespan": {"value": 6, "name": "Lifespan", "unit": "years"},
             "interest_rate": {"value": 0.06, "name": "Interest Rate", "unit": "%"},
@@ -20,10 +17,18 @@ class VariableManager:
             "pfcr": {"value": 0.6, "name": "Fraction of energy charged at public fast chargers", "unit": "%"},
             "dcr": {"value": 0.4, "name": "Fraction of energy charged at depot chargers", "unit": "%"},
             "bc": {"value": 500, "name": "Battery capacity", "unit": "kWh"},
-            "ccph_fast": {"value": 0.5, "name": "Charging infrastructure cost per kWh for public fast chargers", "unit": "Kr/kWh"},
-            "ccph_slow": {"value": 0.2, "name": "Charging infrastructure cost per kWh for depot chargers", "unit": "Kr/kWh"},
-            "r": {"value": 300, "name": "Range of the vehicle per full charge", "unit": "km"},
-            "akm": {"value": 50000, "name": "Annual kilometers driven over", "unit": "km"}
+            "ccph_fast": {"value": 4.0, "name": "Charging infrastructure cost per kWh for public fast chargers", "unit": "Kr/kWh"},
+            "ccph_slow": {"value": 1.0, "name": "Charging infrastructure cost per kWh for depot chargers", "unit": "Kr/kWh"},
+            "r": {"value": 400, "name": "Range of the vehicle per full charge", "unit": "km"},
+            "akm": {"value": 65000, "name": "Annual kilometers driven over", "unit": "km"},
+            "dcur" : {"value": 0.5, "name": "Utilisation of depot charger", "unit": "%"},
+            "fleet_size": {"value": 1, "name": "Fleet size", "unit": ""},
+            "truck_cost": {"value": 1400000.0, "name": "Truck cost", "unit": "Kr"},
+            "battery_cost_per_kWh": {"value": 2500.0, "name": "Battery cost per kWh", "unit": "Kr/kWh"},
+            "mcpkm": {"value": 0.98, "name": "Maintenance cost per km", "unit": "Kr/km"},
+            "subsidy": {"value": 0.25, "name": "Subsidy", "unit": "%"},
+
+
         }
         self.load_variables()
     
