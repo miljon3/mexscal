@@ -41,7 +41,7 @@ display_content("homepage")
 menu_button1 = tk.Button(menu_frame, text="Homepage", command=lambda: display_content("homepage"))
 menu_button1.pack(fill="x", pady=5)
 
-menu_button2 = tk.Button(menu_frame, text="Open Variable Editor", command=lambda: display_content("variable_editor"))
+menu_button2 = tk.Button(menu_frame, text="Variables", command=lambda: display_content("variable_editor"))
 menu_button2.pack(fill="x", pady=5)
 
 menu_button3 = tk.Button(menu_frame, text="TCO", command=lambda: display_content("tco"))
