@@ -85,7 +85,7 @@ def open_tco_page(parent_frame, var_manager):
         chinco = var_manager.variables["chinco"]["value"]
         chutra = var_manager.variables["chutra"]["value"]
         eprice = var_manager.variables["eprice"]["value"]
-        yu = var_manager.variables["activedays"]["value"]
+        yu = var_manager.variables["yu"]["value"]
 
         # Perform calculations
         cic_two = calculate_charger_costs(chinco, chutra, lifespan, bc, yu)
