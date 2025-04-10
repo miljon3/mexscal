@@ -27,6 +27,9 @@ class VariableManager:
             "battery_cost_per_kWh": {"value": 2500.0, "name": "Battery cost per kWh", "unit": "Kr/kWh"},
             "mcpkm": {"value": 0.98, "name": "Maintenance cost per km", "unit": "Kr/km"},
             "subsidy": {"value": 0.25, "name": "Subsidy", "unit": "%"},
+            "chinco": {"value": 1000000.0, "name": "Charger installation cost", "unit": "Kr"},
+            "chutra": {"value": 0.5, "name": "Charger utilization rate", "unit": "%"},
+            "eprice": {"value": 0.92, "name": "Electricity price", "unit": "Kr/kWh"},
 
 
         }
