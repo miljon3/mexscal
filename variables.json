@@ -64,11 +64,6 @@
         "name":"Annual kilometers driven over",
         "unit":"km"
     },
-    "dcur":{
-        "value":0.5,
-        "name":"Utilisation of depot charger",
-        "unit":"%"
-    },
     "fleet_size":{
         "value":1,
         "name":"Fleet size",
@@ -90,8 +85,28 @@
         "unit":"Kr\/km"
     },
     "subsidy":{
-        "value":0.2,
+        "value":0.25,
         "name":"Subsidy",
         "unit":"%"
+    },
+    "chinco":{
+        "value":100000.0,
+        "name":"Charger installation cost",
+        "unit":"Kr"
+    },
+    "chutra":{
+        "value":0.4,
+        "name":"Charger utilization rate",
+        "unit":"%"
+    },
+    "eprice":{
+        "value":0.92,
+        "name":"Electricity price",
+        "unit":"Kr\/kWh"
+    },
+    "yu":{
+        "value":300.0,
+        "name":"Active days in a year",
+        "unit":""
     }
 }

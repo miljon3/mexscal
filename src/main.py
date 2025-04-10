@@ -26,11 +26,8 @@ menu_frame.pack(side="left", fill="y", padx=(10, 0))
 welcome_label = tk.Label(root, text="Welcome")
 welcome_label.pack(pady=(20, 5))
 
-creator_label = tk.Label(root, text="Placeholder")
+creator_label = tk.Label(root, text="This program was made by Erik Råberg & Carl Lavö")
 creator_label.pack(pady=5)
-
-date_label = tk.Label(root, text="Placeholder")
-date_label.pack(pady=(5, 20))
 
 content_frame = tk.Frame(root)
 content_frame.pack(side="left", expand=True, fill="both")
