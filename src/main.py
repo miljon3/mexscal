@@ -1,11 +1,10 @@
 import tkinter as tk
-from tkinter import font
 from variables import VariableManager, open_variable_editor_in_main_window
 from tco import open_tco_page
 
 root = tk.Tk()
 root.title("Main Application")
-root.geometry("1200x1000")
+root.geometry("1400x1000")
 
 var_manager = VariableManager()
 
