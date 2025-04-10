@@ -85,9 +85,10 @@ def open_tco_page(parent_frame, var_manager):
         chinco = var_manager.variables["chinco"]["value"]
         chutra = var_manager.variables["chutra"]["value"]
         eprice = var_manager.variables["eprice"]["value"]
+        yu = var_manager.variables["activedays"]["value"]
 
         # Perform calculations
-        cic_two = calculate_charger_costs(chinco, chutra, lifespan, bc)
+        cic_two = calculate_charger_costs(chinco, chutra, lifespan, bc, yu)
         print(f"Charger cost per kWh: {cic_two:.2f} SEK/kWh")
         ccph_depot = calculate_ccph_depot(cic_two, eprice)
         print(f"Depot charger cost per kWh: {ccph_depot:.2f} SEK/kWh")

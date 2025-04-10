@@ -21,15 +21,15 @@ class VariableManager:
             "ccph_slow": {"value": 1.0, "name": "Charging infrastructure cost per kWh for depot chargers", "unit": "Kr/kWh"},
             "r": {"value": 400, "name": "Range of the vehicle per full charge", "unit": "km"},
             "akm": {"value": 65000, "name": "Annual kilometers driven over", "unit": "km"},
-            "dcur" : {"value": 0.5, "name": "Utilisation of depot charger", "unit": "%"},
             "fleet_size": {"value": 1, "name": "Fleet size", "unit": ""},
             "truck_cost": {"value": 1400000.0, "name": "Truck cost", "unit": "Kr"},
             "battery_cost_per_kWh": {"value": 2500.0, "name": "Battery cost per kWh", "unit": "Kr/kWh"},
             "mcpkm": {"value": 0.98, "name": "Maintenance cost per km", "unit": "Kr/km"},
             "subsidy": {"value": 0.25, "name": "Subsidy", "unit": "%"},
-            "chinco": {"value": 1000000.0, "name": "Charger installation cost", "unit": "Kr"},
-            "chutra": {"value": 0.5, "name": "Charger utilization rate", "unit": "%"},
+            "chinco": {"value": 100000.0, "name": "Charger installation cost", "unit": "Kr"},
+            "chutra": {"value": 0.4, "name": "Charger utilization rate", "unit": "%"},
             "eprice": {"value": 0.92, "name": "Electricity price", "unit": "Kr/kWh"},
+            "yu": {"value": 250, "name": "Active days in a year", "unit": ""},
 
 
         }
