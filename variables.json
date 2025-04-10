@@ -5,7 +5,7 @@
         "unit":"Kr\/h"
     },
     "lifespan":{
-        "value":6.0,
+        "value":5.0,
         "name":"Lifespan",
         "unit":"years"
     },
@@ -60,7 +60,7 @@
         "unit":"km"
     },
     "akm":{
-        "value":62500.0,
+        "value":70000.0,
         "name":"Annual kilometers driven over",
         "unit":"km"
     },

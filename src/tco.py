@@ -1,17 +1,73 @@
 import tkinter as tk
-from tkinter import font
 from charging import calculate_cic, calculate_cic_km
 from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
 
 def open_tco_page(parent_frame, var_manager):
+    # Clear existing widgets in the parent frame
     for widget in parent_frame.winfo_children():
         widget.destroy()
 
-    label = tk.Label(parent_frame, text="Total Cost of Ownership (TCO) Analysis")
-    label.pack(pady=20)
+    # Add TCO page title
+    title_label = tk.Label(parent_frame, text="Total Cost of Ownership (TCO) Analysis")
+    title_label.pack(pady=10)
 
+    # Create a frame for the grid layout
+    grid_frame = tk.Frame(parent_frame)
+    grid_frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+    # Add headers for the columns
+    tk.Label(grid_frame, text="Category").grid(row=0, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(grid_frame, text="Per km").grid(row=0, column=1, padx=10, pady=5)
+    tk.Label(grid_frame, text="Monthly").grid(row=0, column=2, padx=10, pady=5)
+    tk.Label(grid_frame, text="Yearly").grid(row=0, column=3, padx=10, pady=5)
+
+    # Add category labels
+    tk.Label(grid_frame, text="Charging Infrastructure Cost").grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(grid_frame, text="Maintenance").grid(row=2, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(grid_frame, text="Financing").grid(row=3, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(grid_frame, text="Total").grid(row=4, column=0, padx=10, pady=5, sticky="w")
+
+    # Add data labels for costs
+    label_cic_km = tk.Label(grid_frame, text="N/A")
+    label_cic_km.grid(row=1, column=1, padx=10, pady=5)
+
+    label_cic_monthly = tk.Label(grid_frame, text="N/A")
+    label_cic_monthly.grid(row=1, column=2, padx=10, pady=5)
+
+    label_cic_yearly = tk.Label(grid_frame, text="N/A")
+    label_cic_yearly.grid(row=1, column=3, padx=10, pady=5)
+
+    label_maintenance_km = tk.Label(grid_frame, text="N/A")
+    label_maintenance_km.grid(row=2, column=1, padx=10, pady=5)
+
+    label_maintenance_monthly = tk.Label(grid_frame, text="N/A")
+    label_maintenance_monthly.grid(row=2, column=2, padx=10, pady=5)
+
+    label_maintenance_yearly = tk.Label(grid_frame, text="N/A")
+    label_maintenance_yearly.grid(row=2, column=3, padx=10, pady=5)
+
+    label_financial_km = tk.Label(grid_frame, text="N/A")
+    label_financial_km.grid(row=4, column=1, padx=10, pady=5)
+
+    label_financial_monthly = tk.Label(grid_frame, text="N/A")
+    label_financial_monthly.grid(row=4, column=2, padx=10, pady=5)
+
+    label_financial_yearly = tk.Label(grid_frame, text="N/A")
+    label_financial_yearly.grid(row=4, column=3, padx=10, pady=5)
+
+    label_total_per_km = tk.Label(grid_frame, text="N/A")
+    label_total_per_km.grid(row=3, column=1, padx=10, pady=5)
+
+    label_total_monthly = tk.Label(grid_frame, text="N/A")
+    label_total_monthly.grid(row=3, column=2, padx=10, pady=5)
+
+    label_total_yearly = tk.Label(grid_frame, text="N/A")
+    label_total_yearly.grid(row=3, column=3, padx=10, pady=5)
+
+    # Function to calculate and display costs
     def calculate_and_display_cic():
+        # Retrieve variables from var_manager
         pfcr = var_manager.variables["pfcr"]["value"]
         dcr = var_manager.variables["dcr"]["value"]
         bc = var_manager.variables["bc"]["value"]
@@ -23,69 +79,42 @@ def open_tco_page(parent_frame, var_manager):
         truck_cost = var_manager.variables["truck_cost"]["value"]
         battery_cost_per_kWh = var_manager.variables["battery_cost_per_kWh"]["value"]
         lifespan = var_manager.variables["lifespan"]["value"]
-        interes_rate = var_manager.variables["interest_rate"]["value"]
-        battery_cost = bc * battery_cost_per_kWh
+        interest_rate = var_manager.variables["interest_rate"]["value"]
         subsidy = var_manager.variables["subsidy"]["value"]
         remaining_value = var_manager.variables["remaining_value"]["value"]
 
+        # Perform calculations
         cic_km = calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_slow, r)
         cic = calculate_cic(cic_km, akm)
-
-        label_cic_km.config(text=f"CIC_KM: {cic_km:.2f} SEK/km")
-        label_cic.config(text=f"CIC: {cic:.2f} SEK")
-
         maintenance_cost = calculate_maintenance_cost(mckpm, akm)
-        label_maintenance.config(text=f"Maintenance Cost: {maintenance_cost:.2f} SEK")
+        battery_cost = bc * battery_cost_per_kWh
+        financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, remaining_value)
 
-        financing_cost = calculate_financing_cost(truck_cost, battery_cost, interes_rate, lifespan, subsidy, remaining_value)
-        label_financing.config(text=f"Financing Cost: {financing_cost:.2f} SEK")
+        # Calculate total costs
+        total_cost_yearly = cic + maintenance_cost + financing_cost
+        total_cost_monthly = total_cost_yearly / 12
+        total_cost_per_km = total_cost_yearly / akm
 
-        # Load the interest rate and lifespan from the variable manager
-        interest_rate = var_manager.variables["interest_rate"]["value"]
-        lifespan = var_manager.variables["lifespan"]["value"]
+        # Update CIC labels
+        label_cic_km.config(text=f"{cic_km:.2f} SEK/km")
+        label_cic_monthly.config(text=f"{cic / 12:.2f} SEK")
+        label_cic_yearly.config(text=f"{cic:.2f} SEK")
 
-        # Add the lifespan and interest rate to their labels
-        label_lifespan.config(text=f"Lifespan (years): {lifespan}")
-        label_interest_rate.config(text=f"Interest Rate (%): {interest_rate * 100:.2f}")
-        label_remaining_value.config(text=f"Remaining Value (%): {remaining_value * 100:.2f}")
-        label_subsidy.config(text=f"Subsidy (%): {subsidy * 100:.2f}")
+        # Update maintenance labels
+        label_maintenance_km.config(text=f"{maintenance_cost / akm:.2f} SEK/km")
+        label_maintenance_monthly.config(text=f"{maintenance_cost / 12:.2f} SEK")
+        label_maintenance_yearly.config(text=f"{maintenance_cost:.2f} SEK")
 
+        # Update financing labels
+        label_financial_km.config(text=f"{financing_cost / akm:.2f} SEK/km")
+        label_financial_monthly.config(text=f"{financing_cost / 12:.2f} SEK")
+        label_financial_yearly.config(text=f"{financing_cost:.2f} SEK")
 
-        # Add everything up to get the total cost of ownership (TCO)
-        total_cost = cic*lifespan + maintenance_cost*lifespan + financing_cost
-        label_tco.config(text=f"Total Cost of Ownership (TCO): {total_cost:.2f} SEK")
+        # Update total cost labels
+        label_total_per_km.config(text=f"{total_cost_per_km:.2f} SEK/km")
+        label_total_monthly.config(text=f"{total_cost_monthly:.2f} SEK")
+        label_total_yearly.config(text=f"{total_cost_yearly:.2f} SEK")
 
-
-
-    calculate_button = tk.Button(parent_frame, text="Calculate CIC", command=calculate_and_display_cic)
-    calculate_button.pack(pady=20)
-
-    label_cic_km = tk.Label(parent_frame, text="CIC_KM: N/A")
-    label_cic_km.pack(pady=10)
-
-    label_cic = tk.Label(parent_frame, text="CIC: N/A")
-    label_cic.pack(pady=10)
-
-    label_maintenance = tk.Label(parent_frame, text="Maintenance Cost: N/A")
-    label_maintenance.pack(pady=10)
-
-    label_financing = tk.Label(parent_frame, text="Financing Cost: N/A")
-    label_financing.pack(pady=10)
-
-    # Label the lifespan and interest rate for clarity
-    label_lifespan = tk.Label(parent_frame, text="Lifespan (years):")
-    label_lifespan.pack(pady=5)
-
-    label_interest_rate = tk.Label(parent_frame, text="Interest Rate (%):")
-    label_interest_rate.pack(pady=5)
-
-    label_remaining_value = tk.Label(parent_frame, text="Remaining Value (%):")
-    label_remaining_value.pack(pady=5)
-
-    label_subsidy = tk.Label(parent_frame, text="Subsidy (%):")
-    label_subsidy.pack(pady=5)
-
-
-    # Create a label for the total cost of ownership (TCO)
-    label_tco = tk.Label(parent_frame, text="Total Cost of Ownership (TCO): N/A")
-    label_tco.pack(pady=10)
+    # Button to trigger the calculation
+    calculate_button = tk.Button(parent_frame, text="Calculate Costs", command=calculate_and_display_cic)
+    calculate_button.pack(pady=10)
