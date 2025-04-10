@@ -1,5 +1,5 @@
 import tkinter as tk
-from charging import calculate_cic, calculate_cic_km, calculate_charger_costs
+from charging import calculate_cic, calculate_cic_km, calculate_charger_costs, calculate_ccph_depot
 from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
 
@@ -89,7 +89,10 @@ def open_tco_page(parent_frame, var_manager):
         # Perform calculations
         cic_two = calculate_charger_costs(chinco, chutra, lifespan, bc)
         print(f"Charger cost per kWh: {cic_two:.2f} SEK/kWh")
-        cic_km = calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_slow, eprice, r)
+        ccph_depot = calculate_ccph_depot(cic_two, eprice)
+        print(f"Depot charger cost per kWh: {ccph_depot:.2f} SEK/kWh")
+        # Replaced ccph_slow with ccph_depot in the calculation
+        cic_km = calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_depot, eprice, r)
         cic = calculate_cic(cic_km, akm)
         maintenance_cost = calculate_maintenance_cost(mckpm, akm)
         battery_cost = bc * battery_cost_per_kWh
