@@ -95,9 +95,18 @@ def open_tco_page(parent_frame, var_manager):
 
         # Financing
         battery_cost = bc * battery_cost_per_kWh
-        truck_financing = calculate_financing_cost(truck_cost, 0, interest_rate, lifespan, 0, 0)
-        battery_financing = calculate_financing_cost(0, battery_cost, interest_rate, lifespan, subsidy, remaining_value)
-        total_financing = truck_financing + battery_financing
+        total_financing = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, remaining_value)
+        print(f"Total Financing: {total_financing}")
+
+        # Share of total cost from battery
+        bshare = battery_cost / (battery_cost + truck_cost)
+        print(f"Battery Share: {bshare}")
+        tshare = truck_cost / (battery_cost + truck_cost)
+        print(f"Truck Share: {tshare}")
+        battery_financing = total_financing * bshare
+        truck_financing = total_financing * tshare
+        print(f"Battery Financing: {battery_financing}")
+        print(f"Truck Financing: {truck_financing}")
 
         # Totals
         total_cost_yearly = cic + maintenance_cost + total_financing

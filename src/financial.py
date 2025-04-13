@@ -12,12 +12,17 @@ def calculate_financing_cost(truck_cost, battery_cost, interest_rate, loan_term_
     """
     # Apply subsidy to the cost
     total_cost = (truck_cost + battery_cost) * (1 - subsidy)
+    print(f"Total cost after subsidy: {total_cost:.2f} SEK")
     
     # Calculate monthly payment
     monthly_interest_rate = interest_rate / 12
+
     number_of_payments = loan_term_years * 12
+
     monthly_payment = (total_cost * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** -number_of_payments)
+    print(f"Monthly payment: {monthly_payment:.2f} SEK")
     
     # Total cost subtracting remaining value
-    total_financing_cost = (monthly_payment * number_of_payments) - (total_cost * remaining_value)
-    return total_financing_cost
+    yearly_financing_cost = ((monthly_payment * number_of_payments) - (total_cost * remaining_value))/loan_term_years
+    print(f"Total financing cost: {yearly_financing_cost:.2f} SEK")
+    return yearly_financing_cost
