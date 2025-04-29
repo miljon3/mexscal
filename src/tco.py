@@ -1,5 +1,5 @@
 import tkinter as tk
-from charging import calculate_cic, calculate_cic_km, calculate_charger_costs, calculate_ccph_depot
+from charging import calculate_cic, calculate_cic_km, calculate_charger_costs, calculate_ccph_depot, calculate_cycles
 from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
 
@@ -83,6 +83,11 @@ def open_tco_page(parent_frame, var_manager):
         chutra = var_manager.variables["chutra"]["value"]
         eprice = var_manager.variables["eprice"]["value"]
         yu = var_manager.variables["yu"]["value"]
+        battery_cost = bc * battery_cost_per_kWh
+        subsidy = var_manager.variables["subsidy"]["value"]
+        remaining_value = var_manager.variables["remaining_value"]["value"]
+        bcls = var_manager.variables["bcls"]["value"]
+        bcd = var_manager.variables["bcd"]["value"]
 
         # Charging
         cic_two = calculate_charger_costs(chinco, chutra, lifespan, bc, yu)
@@ -95,21 +100,21 @@ def open_tco_page(parent_frame, var_manager):
 
         # Financing
         battery_cost = bc * battery_cost_per_kWh
-        total_financing = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, remaining_value)
-        print(f"Total Financing: {total_financing}")
+        tcls = calculate_cycles(bc, r, akm, bcd)
+        financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, remaining_value, bcls, tcls)
 
         # Share of total cost from battery
         bshare = battery_cost / (battery_cost + truck_cost)
         print(f"Battery Share: {bshare}")
         tshare = truck_cost / (battery_cost + truck_cost)
         print(f"Truck Share: {tshare}")
-        battery_financing = total_financing * bshare
-        truck_financing = total_financing * tshare
+        battery_financing = financing_cost * bshare
+        truck_financing = financing_cost * tshare
         print(f"Battery Financing: {battery_financing}")
         print(f"Truck Financing: {truck_financing}")
 
         # Totals
-        total_cost_yearly = cic + maintenance_cost + total_financing
+        total_cost_yearly = cic + maintenance_cost + financing_cost
         total_cost_monthly = total_cost_yearly / 12
         total_cost_per_km = total_cost_yearly / akm
 

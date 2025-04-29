@@ -59,3 +59,17 @@ def calculate_cic(cic_km, akm):
     :return: CIC (Total charging infrastructure cost)
     """
     return cic_km * akm
+
+def calculate_cycles(bc, r, km, cd):
+    """
+    Calculate the number of cycles based on battery capacity, range, and kilometers driven.
+    :param bc: Battery capacity [kWh]
+    :param r: Range of the vehicle per full charge [km]
+    :param km: Kilometers driven [km]
+    :param cd: Cycle Discharge [%] e.g 0.8 for 80% discharge from 90% to 10% etc.
+    :return: Number of cycles
+    """
+    cycle_per_km = bc*cd / r
+    cycles = km * cycle_per_km
+
+    return cycles

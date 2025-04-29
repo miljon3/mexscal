@@ -30,6 +30,8 @@ class VariableManager:
             "chutra": {"value": 0.4, "name": "Charger utilization rate", "unit": "%"},
             "eprice": {"value": 0.92, "name": "Electricity price", "unit": "Kr/kWh"},
             "yu": {"value": 250, "name": "Active days in a year", "unit": ""},
+            "bcls": {"value": 5000, "name": "Battery Cycle Lifespan", "unit": "Cycles"},
+            "bcd": {"value": 0.8, "name": "Battery Cycle Discharge", "unit": "%"},
 
 
         }
