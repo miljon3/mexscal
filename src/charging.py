@@ -60,7 +60,7 @@ def calculate_cic(cic_km, akm):
     """
     return cic_km * akm
 
-def calculate_cycles(bc, r, km, cd):
+def calculate_cycles(r, km, cd):
     """
     Calculate the number of cycles based on battery capacity, range, and kilometers driven.
     :param bc: Battery capacity [kWh]
@@ -69,7 +69,10 @@ def calculate_cycles(bc, r, km, cd):
     :param cd: Cycle Discharge [%] e.g 0.8 for 80% discharge from 90% to 10% etc.
     :return: Number of cycles
     """
-    cycle_per_km = bc*cd / r
-    cycles = km * cycle_per_km
+    print(f"Range: {r} km")
+    print(f"Kilometers driven: {km} km")
+    print(f"Cycle discharge: {cd} %")
+    cycles = (km / r) * cd
+    print(f"Total cycles: {cycles} cycles")
 
     return cycles

@@ -69,7 +69,6 @@ def open_tco_page(parent_frame, var_manager):
         dcr = var_manager.variables["dcr"]["value"]
         bc = var_manager.variables["bc"]["value"]
         ccph_fast = var_manager.variables["ccph_fast"]["value"]
-        ccph_slow = var_manager.variables["ccph_slow"]["value"]
         r = var_manager.variables["r"]["value"]
         akm = var_manager.variables["akm"]["value"]
         mckpm = var_manager.variables["mcpkm"]["value"]
@@ -100,7 +99,8 @@ def open_tco_page(parent_frame, var_manager):
 
         # Financing
         battery_cost = bc * battery_cost_per_kWh
-        tcls = calculate_cycles(bc, r, akm, bcd)
+        tcls = calculate_cycles(r, akm, bcd)
+        print(f"Total cycles: {tcls}")
         financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, remaining_value, bcls, tcls)
 
         # Share of total cost from battery

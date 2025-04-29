@@ -21,10 +21,14 @@ def calculate_financing_cost(truck_cost, battery_cost, interest_rate, loan_term_
 
     number_of_payments = loan_term_years * 12
 
+    # TODO: Make value loss accumulate over the loan term?
+
     monthly_payment = (total_cost * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** -number_of_payments)
     print(f"Monthly payment: {monthly_payment:.2f} SEK")
     truck_value_remaining = truck_cost * remaining_value
     battery_value_remaining = battery_cost * (1 - tcls / bcls)
+    print(f"Truck value remaining: {truck_value_remaining:.2f} SEK")
+    print(f"Battery value remaining: {battery_value_remaining:.2f} SEK")
     
     # Total cost subtracting remaining value
     yearly_financing_cost = ((monthly_payment * number_of_payments) - (truck_value_remaining + battery_value_remaining))/loan_term_years
