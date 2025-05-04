@@ -18,8 +18,8 @@ class VariableManager:
             "dcr": {"value": 0.4, "name": "Fraction of energy charged at depot chargers", "unit": "%"},
             "bc": {"value": 500, "name": "Battery capacity", "unit": "kWh"},
             "ccph_fast": {"value": 4.0, "name": "Public fast charger cost", "unit": "Kr/kWh"},
-            "r": {"value": 400, "name": "Range of the vehicle per full charge", "unit": "km"},
-            "akm": {"value": 65000, "name": "Annual kilometers driven over", "unit": "km"},
+            "r": {"value": 465, "name": "Range of the vehicle per full charge", "unit": "km"},
+            "akm": {"value": 65000, "name": "Annual kilometers driven", "unit": "km"},
             "fleet_size": {"value": 1, "name": "Fleet size", "unit": ""},
             "truck_cost": {"value": 1400000.0, "name": "Truck cost", "unit": "Kr"},
             "battery_cost_per_kWh": {"value": 2500.0, "name": "Battery cost per kWh", "unit": "Kr/kWh"},
@@ -31,6 +31,7 @@ class VariableManager:
             "yu": {"value": 250, "name": "Active days in a year", "unit": ""},
             "bcls": {"value": 5000, "name": "Battery Cycle Lifespan", "unit": "Cycles"},
             "bcd": {"value": 0.8, "name": "Battery Cycle Discharge", "unit": "%"},
+            "type": {"value": 4, "name": "Type of usage", "unit": "1/2/3/4"},
 
 
         }
