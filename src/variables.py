@@ -29,7 +29,6 @@ class VariableManager:
             "bcd": {"value": 0.8, "name": "Battery Cycle Discharge", "unit": "%"},
             "type": {"value": 4, "name": "Type of usage", "unit": "1/2/3/4"},
 
-
         }
         self.load_variables()
     
@@ -65,16 +64,18 @@ def open_variable_editor_in_main_window(root, var_manager):
     row = 0
     col = 0
     max_columns = 3
-
     field_width = 15
 
     for var_name, info in var_manager.variables.items():
+        if var_name == "type":
+            continue  # Skip for now, we'll render it separately
+
         frame = tk.Frame(root)
         frame.grid(row=row, column=col, padx=10, pady=5, sticky="w")
 
         label_var = tk.StringVar()
         label_var.set(f"{info['name']}: {info['value']} {info['unit']}")
-        label = tk.Label(frame, textvariable=label_var, anchor="w", width=field_width*2)  # Fixed width
+        label = tk.Label(frame, textvariable=label_var, anchor="w", width=field_width*2)
         label.grid(row=0, column=0, columnspan=3, sticky="w")
 
         entry = tk.Entry(frame, width=field_width)
@@ -84,13 +85,16 @@ def open_variable_editor_in_main_window(root, var_manager):
         button_frame = tk.Frame(frame)
         button_frame.grid(row=2, column=0, columnspan=3, sticky="ew")
 
-        button_minus_25 = tk.Button(button_frame, text="-25%", width=5, command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 0.75))
+        button_minus_25 = tk.Button(button_frame, text="-25%", width=5,
+                                    command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 0.75))
         button_minus_25.pack(side='left', expand=True, padx=2)
 
-        button_update = tk.Button(button_frame, text="Update", width=8, command=lambda v=var_name, e=entry, lv=label_var: handle_update(v, e, lv, var_manager))
+        button_update = tk.Button(button_frame, text="Update", width=8,
+                                  command=lambda v=var_name, e=entry, lv=label_var: handle_update(v, e, lv, var_manager))
         button_update.pack(side='left', expand=True, padx=2)
 
-        button_plus_25 = tk.Button(button_frame, text="+25%", width=5, command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 1.25))
+        button_plus_25 = tk.Button(button_frame, text="+25%", width=5,
+                                   command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 1.25))
         button_plus_25.pack(side='left', expand=True, padx=2)
 
         entries[var_name] = (entry, label_var)
@@ -99,6 +103,33 @@ def open_variable_editor_in_main_window(root, var_manager):
         if col >= max_columns:
             col = 0
             row += 1
+
+    # Separate UI for 'type'
+    type_info = var_manager.variables["type"]
+    type_frame = tk.Frame(root)
+    type_frame.grid(row=row + 1, column=0, columnspan=max_columns, padx=10, pady=10, sticky="w")
+
+    type_label_var = tk.StringVar()
+    type_label_var.set(f"{type_info['name']}: {type_info['value']} {type_info['unit']}")
+    type_label = tk.Label(type_frame, textvariable=type_label_var, anchor="w", width=field_width*2)
+    type_label.grid(row=0, column=0, padx=5, pady=2, sticky="w")
+
+    selected_type = tk.StringVar()
+    selected_type.set(str(type_info['value']))
+    type_dropdown = tk.OptionMenu(type_frame, selected_type, "1", "2", "3", "4")
+    type_dropdown.config(width=field_width - 3)
+    type_dropdown.grid(row=1, column=0, padx=5, pady=2, sticky="w")
+
+    def update_type():
+        if var_manager.update_variable("type", selected_type.get()):
+            type_label_var.set(f"{type_info['name']}: {var_manager.variables['type']['value']} {type_info['unit']}")
+            messagebox.showinfo("Success", "Type updated successfully!")
+        else:
+            messagebox.showerror("Error", "Invalid type selected.")
+
+    type_update_btn = tk.Button(type_frame, text="Update", width=8, command=update_type)
+    type_update_btn.grid(row=1, column=1, padx=5, sticky="w")
+
 
 
 def handle_update(var_name, entry_field, label_var, var_manager):

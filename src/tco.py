@@ -155,9 +155,23 @@ def open_tco_page(parent_frame, var_manager):
         driver_cost_yearly = calculate_driver_cost(total_hours, cost_driver_hourly)
         driver_cost_km = calculate_driver_cost_km(total_hours, cost_driver_hourly, akm)
 
-        # TODO: Road tax
+       
 
         """ Financial Costs"""
+
+        # Taxes
+
+        # TODO: Road tax
+
+
+
+        # Depreciation
+
+        # TODO: Depreciation by distance and time
+
+
+
+
 
         # Financing
         # TODO: Tax and subsidy presentation logic for financing costs
@@ -167,6 +181,7 @@ def open_tco_page(parent_frame, var_manager):
         print(f"Total cycles: {tcls}")
         financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, remaining_value, bcls, tcls)
 
+        print(f"Financing Cost: {financing_cost:.2f} SEK")
 
         # Share of total cost from battery
         bshare = battery_cost / (battery_cost + truck_cost)
@@ -177,6 +192,8 @@ def open_tco_page(parent_frame, var_manager):
         truck_financing = financing_cost * tshare
         print(f"Battery Financing: {battery_financing}")
         print(f"Truck Financing: {truck_financing}")
+
+        """ Total costs are done below"""
 
         # Totals
         total_cost_yearly = cic + maintenance_cost + financing_cost + driver_cost_yearly
