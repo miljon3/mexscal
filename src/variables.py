@@ -11,9 +11,6 @@ class VariableManager:
             "cost_driver_hourly": {"value": 339.9, "name": "Driver Hourly Cost", "unit": "Kr/h"},
             "lifespan": {"value": 6, "name": "Lifespan", "unit": "years"},
             "interest_rate": {"value": 0.06, "name": "Interest Rate", "unit": "%"},
-            "remaining_value": {"value": 0.3, "name": "Remaining Value", "unit": "%"},
-            "yearly_depreciation": {"value": 0.3, "name": "Yearly Depreciation", "unit": "%"},
-            "distance_deprecation": {"value": 0.0, "name": "Distance related depreciation", "unit": "%/km"},
             "bc": {"value": 500, "name": "Battery capacity", "unit": "kWh"},
             "ccph_fast": {"value": 4.0, "name": "Public fast charger cost", "unit": "Kr/kWh"},
             "r": {"value": 465, "name": "Range of the vehicle per full charge", "unit": "km"},
@@ -28,6 +25,8 @@ class VariableManager:
             "bcls": {"value": 5000, "name": "Battery Cycle Lifespan", "unit": "Cycles"},
             "bcd": {"value": 0.8, "name": "Battery Cycle Discharge", "unit": "%"},
             "type": {"value": 4, "name": "Type of usage", "unit": "1/2/3/4"},
+            "dmile": {"value": 0.0001, "name": "Depreciation Mileage", "unit": ""},
+            "dannum": {"value": 0.2, "name": "Depreciation Year", "unit": ""},
 
         }
         self.load_variables()

@@ -4,6 +4,7 @@ from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
 from montecarlo import monte_carlo_sampling, return_totals
 from routes import calculate_driver_cost, calculate_driver_cost_km
+from depreciation import residual_value
 
 def open_tco_page(parent_frame, var_manager):
     for widget in parent_frame.winfo_children():
@@ -98,17 +99,16 @@ def open_tco_page(parent_frame, var_manager):
         lifespan = var_manager.variables["lifespan"]["value"]
         interest_rate = var_manager.variables["interest_rate"]["value"]
         subsidy = var_manager.variables["subsidy"]["value"]
-        remaining_value = var_manager.variables["remaining_value"]["value"]
         chinco = var_manager.variables["chinco"]["value"]
         chutra = var_manager.variables["chutra"]["value"]
         eprice = var_manager.variables["eprice"]["value"]
         yu = int(var_manager.variables["yu"]["value"])
         battery_cost = bc * battery_cost_per_kWh
-        subsidy = var_manager.variables["subsidy"]["value"]
-        remaining_value = var_manager.variables["remaining_value"]["value"]
         bcls = var_manager.variables["bcls"]["value"]
         bcd = var_manager.variables["bcd"]["value"]
         type = var_manager.variables["type"]["value"]
+        dannum = var_manager.variables["dannum"]["value"]
+        dmile = var_manager.variables["dmile"]["value"]
         # Run the Monte Carlo simulation
         daily_range = r * bcd
         daily_battery_capacity = bc * bcd
@@ -163,11 +163,16 @@ def open_tco_page(parent_frame, var_manager):
 
         # TODO: Road tax
 
-
-
-        # Depreciation
-
-        # TODO: Depreciation by distance and time
+        # TODO: Depreciation by distance and time for the truck, battery already done
+        mileage = akm * lifespan
+        # Manually override the depreciation values for testing
+        # A study https://publications.anl.gov/anlpubs/2021/05/167399.pdf suggests a value of 6.25e-8 per km
+        dmile = 6.25e-8
+        dannum = 0.2
+        remaining_value = residual_value(truck_cost, dannum, dmile, lifespan, mileage)
+        dconstant = (remaining_value) / truck_cost
+        print(f"Depreciation Constant: {dconstant:.2f}")
+        print(f"Remaining Value: {remaining_value:.2f} SEK")
 
 
 
@@ -179,19 +184,15 @@ def open_tco_page(parent_frame, var_manager):
         tcls = calculate_cycles(r, akm, bcd) * lifespan
         # TODO: Check yearly logic of cycles, possibly adding ability to change type of usage
         print(f"Total cycles: {tcls}")
-        financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, remaining_value, bcls, tcls)
+        financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, dconstant, bcls, tcls)
 
         print(f"Financing Cost: {financing_cost:.2f} SEK")
 
         # Share of total cost from battery
         bshare = battery_cost / (battery_cost + truck_cost)
-        print(f"Battery Share: {bshare}")
         tshare = truck_cost / (battery_cost + truck_cost)
-        print(f"Truck Share: {tshare}")
         battery_financing = financing_cost * bshare
         truck_financing = financing_cost * tshare
-        print(f"Battery Financing: {battery_financing}")
-        print(f"Truck Financing: {truck_financing}")
 
         """ Total costs are done below"""
 

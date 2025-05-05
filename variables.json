@@ -5,7 +5,7 @@
         "unit":"Kr\/h"
     },
     "lifespan":{
-        "value":5.0,
+        "value":6.0,
         "name":"Lifespan",
         "unit":"years"
     },
@@ -13,21 +13,6 @@
         "value":0.06,
         "name":"Interest Rate",
         "unit":"%"
-    },
-    "remaining_value":{
-        "value":0.3,
-        "name":"Remaining Value",
-        "unit":"%"
-    },
-    "yearly_depreciation":{
-        "value":0.3,
-        "name":"Yearly Depreciation",
-        "unit":"%"
-    },
-    "distance_deprecation":{
-        "value":0.0,
-        "name":"Distance related depreciation",
-        "unit":"%\/km"
     },
     "bc":{
         "value":524.0,
@@ -98,5 +83,15 @@
         "value":4.0,
         "name":"Type of usage",
         "unit":"1\/2\/3\/4"
+    },
+    "dmile":{
+        "value":0.002,
+        "name":"Depreciation Mileage",
+        "unit":""
+    },
+    "dannum":{
+        "value":0.1,
+        "name":"Depreciation Year",
+        "unit":""
     }
 }

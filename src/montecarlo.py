@@ -131,9 +131,6 @@ def return_totals(simulated_data):
     total_distance = np.sum(simulated_data[:, 0])
     total_stops = np.sum(simulated_data[:, 1])
     total_hours = np.sum(simulated_data[:, 2])
-    print(f"Total distance driven: {total_distance:.1f} km")
-    print(f"Total charging stops: {total_stops}")
-    print(f"Total hours driven: {total_hours} hours")
     return total_distance, total_stops, total_hours
 
 
