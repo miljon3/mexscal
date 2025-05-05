@@ -1,6 +1,6 @@
 # Module for calculating costs related to charging.
 
-def calculate_charger_costs(chinco, chutra, lifespan, bc, yu=250):
+def calculate_charger_costs(chinco, chutra, lifespan, bc, yu):
     """
     Calculate the charger costs per kWh, yearly over lifespan.
     :param lifespan: Lifespan of the charger [years]
@@ -33,7 +33,7 @@ def calculate_ccph_depot(cpkwh, eprice):
     return ccph_depot
 
 
-def calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_slow, eprice, r):
+def calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_depot, r):
     """
     Calculate the charging infrastructure cost per kilometre (CIC_KM)
     :param pfcr: Fraction of energy charged at public fast chargers
@@ -45,20 +45,16 @@ def calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_slow, eprice, r):
     :param eprice: Electricity price [SEK/kWh]
     :return: CIC_KM (Charging infrastructure cost per km)
     """
+    print(f"Public Fast Charging Ratio: {pfcr:.2f}")
+    print(f"Depot Charging Ratio: {dcr:.2f}")
+    # TODO: Evaluate if bcd should be used
     cic_fast_km = (bc * ccph_fast) / r
-    cic_slow_km = (bc * ccph_slow) / r
+    cic_slow_km = (bc * ccph_depot) / r
+    print(f"Charging Infrastructure Cost per km (Fast): {cic_fast_km:.2f} SEK/km")
+    print(f"Charging Infrastructure Cost per km (Depot): {cic_slow_km:.2f} SEK/km")
     
     cic_km = pfcr * cic_fast_km + dcr * cic_slow_km
     return cic_km
-
-def calculate_cic(cic_km, akm):
-    """
-    Calculate the total charging infrastructure cost (CIC)
-    :param cic_km: Charging infrastructure cost per km
-    :param akm: Annual kilometers driven
-    :return: CIC (Total charging infrastructure cost)
-    """
-    return cic_km * akm
 
 def calculate_cycles(r, km, cd):
     """

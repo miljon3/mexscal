@@ -1,5 +1,5 @@
 import tkinter as tk
-from charging import calculate_cic, calculate_cic_km, calculate_charger_costs, calculate_ccph_depot, calculate_cycles
+from charging import calculate_cic_km, calculate_charger_costs, calculate_ccph_depot, calculate_cycles
 from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
 from montecarlo import monte_carlo_sampling, return_totals
@@ -111,6 +111,7 @@ def open_tco_page(parent_frame, var_manager):
         type = var_manager.variables["type"]["value"]
         # Run the Monte Carlo simulation
         daily_range = r * bcd
+        daily_battery_capacity = bc * bcd
         simulated_data = monte_carlo_sampling(yu, type, daily_range)
         # Calculate the total distance driven and the number of charging stops
         akm, total_stops, total_hours = return_totals(simulated_data)
@@ -121,19 +122,29 @@ def open_tco_page(parent_frame, var_manager):
         print(f"Total hours: {total_hours}")
 
         # Use total stops to calculate the ratio dcr and pfcr. (Public fast charging stops / total stops + depot stops (one a day))
-        pfcr = total_stops / (yu + total_stops)
-        dcr = 1-pfcr
+        # If nomadic driving, we never charge at depot, so dcr = 0 and pfcr = 1
+        if type == 4:
+            pfcr = 1
+            dcr = 0
+        # If we have depot charging, we need to calculate the ratio of public fast charging stops to total stops
+        else:
+            pfcr = total_stops / (yu + total_stops)
+            dcr = 1-pfcr
         print(f"Daily Charging Ratio: {pfcr:.2f}")
 
         """ Charging costs """
 
         # Charging
-        # TODO: CHeck why costs do not update when changing the values in the variable editor¨
         # TODO: Add separate presentation of tax costs involved in the charging costs
-        cic_two = calculate_charger_costs(chinco, chutra, lifespan, bc, yu)
-        ccph_depot = calculate_ccph_depot(cic_two, eprice)
-        cic_km = calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_depot, eprice, r)
-        cic = calculate_cic(cic_km, akm)
+        cic_installation = calculate_charger_costs(chinco, chutra, lifespan, daily_battery_capacity, yu)
+        ccph_depot = calculate_ccph_depot(cic_installation, eprice)
+        # Added check for nomadic driving.
+        if type == 4:
+            ccph_depot = 0
+            eprice = 0
+        cic_km = calculate_cic_km(pfcr, dcr, daily_battery_capacity, ccph_fast, ccph_depot, daily_range)
+        cic = cic_km * akm
+        print(f"Total Charging Infrastructure Cost: {cic:.2f} SEK")
 
         """ Operational costs """
 
@@ -172,8 +183,8 @@ def open_tco_page(parent_frame, var_manager):
         total_cost_monthly = total_cost_yearly / 12
         total_cost_per_km = total_cost_yearly / akm
 
-        # Update labels
-        charger_cost_per_km = ((bc * ccph_fast) + (bc * ccph_depot)) / (2 * r)
+        # Fixed charging cost per km
+        charger_cost_per_km = cic_km
         label_charger_cost_km.config(text=f"{charger_cost_per_km:.2f} SEK/km")
         label_energy_price_km.config(text=f"{(bc * eprice) / r:.2f} SEK/km")
 
