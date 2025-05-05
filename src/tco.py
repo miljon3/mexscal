@@ -83,6 +83,7 @@ def open_tco_page(parent_frame, var_manager):
     label_total_km.grid(row=11, column=1, padx=10, pady=5)
 
     def calculate_and_display_cic():
+        """ Variables """
         #pfcr = var_manager.variables["pfcr"]["value"]
         #dcr = var_manager.variables["dcr"]["value"]
         cost_driver_hourly = var_manager.variables["cost_driver_hourly"]["value"]
@@ -124,11 +125,17 @@ def open_tco_page(parent_frame, var_manager):
         dcr = 1-pfcr
         print(f"Daily Charging Ratio: {pfcr:.2f}")
 
+        """ Charging costs """
+
         # Charging
+        # TODO: CHeck why costs do not update when changing the values in the variable editor¨
+        # TODO: Add separate presentation of tax costs involved in the charging costs
         cic_two = calculate_charger_costs(chinco, chutra, lifespan, bc, yu)
         ccph_depot = calculate_ccph_depot(cic_two, eprice)
         cic_km = calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_depot, eprice, r)
         cic = calculate_cic(cic_km, akm)
+
+        """ Operational costs """
 
         # Maintenance
         maintenance_cost = calculate_maintenance_cost(mckpm, akm)
@@ -137,12 +144,18 @@ def open_tco_page(parent_frame, var_manager):
         driver_cost_yearly = calculate_driver_cost(total_hours, cost_driver_hourly)
         driver_cost_km = calculate_driver_cost_km(total_hours, cost_driver_hourly, akm)
 
+        # TODO: Road tax
+
+        """ Financial Costs"""
+
         # Financing
+        # TODO: Tax and subsidy presentation logic for financing costs
         battery_cost = bc * battery_cost_per_kWh
         tcls = calculate_cycles(r, akm, bcd) * lifespan
         # TODO: Check yearly logic of cycles, possibly adding ability to change type of usage
         print(f"Total cycles: {tcls}")
         financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, remaining_value, bcls, tcls)
+
 
         # Share of total cost from battery
         bshare = battery_cost / (battery_cost + truck_cost)
@@ -180,6 +193,8 @@ def open_tco_page(parent_frame, var_manager):
         label_total_yearly.config(text=f"{total_cost_yearly:.2f} SEK")
 
         label_total_km.config(text=f"{akm:.2f} km")
+
+        # TODO: Create a dataframe to contain all the data and save it to a file
 
 
     calculate_button = tk.Button(parent_frame, text="Calculate Costs", command=calculate_and_display_cic)

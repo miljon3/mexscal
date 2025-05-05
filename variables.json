@@ -46,12 +46,7 @@
     },
     "ccph_fast":{
         "value":4.0,
-        "name":"Charging infrastructure cost per kWh for public fast chargers",
-        "unit":"Kr\/kWh"
-    },
-    "ccph_slow":{
-        "value":1.0,
-        "name":"Charging infrastructure cost per kWh for depot chargers",
+        "name":"Public fast charger cost",
         "unit":"Kr\/kWh"
     },
     "r":{
@@ -61,7 +56,7 @@
     },
     "akm":{
         "value":70000.0,
-        "name":"Annual kilometers driven over",
+        "name":"Annual kilometers driven",
         "unit":"km"
     },
     "fleet_size":{
@@ -108,5 +103,20 @@
         "value":300.0,
         "name":"Active days in a year",
         "unit":""
+    },
+    "bcls":{
+        "value":5000,
+        "name":"Battery Cycle Lifespan",
+        "unit":"Cycles"
+    },
+    "bcd":{
+        "value":0.8,
+        "name":"Battery Cycle Discharge",
+        "unit":"%"
+    },
+    "type":{
+        "value":1.0,
+        "name":"Type of usage",
+        "unit":"1\/2\/3\/4"
     }
 }
