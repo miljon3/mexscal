@@ -118,7 +118,7 @@ def open_variable_editor_in_main_window(root, var_manager):
 
     selected_type = tk.StringVar()
     selected_type.set(str(type_info['value']))
-    type_dropdown = tk.OptionMenu(type_frame, selected_type, "1", "2", "3", "4")
+    type_dropdown = tk.OptionMenu(type_frame, selected_type, "1", "2", "3", "4", "5", "6", "7", "8")
     type_dropdown.config(width=field_width - 3)
     type_dropdown.grid(row=1, column=0, padx=5, pady=2, sticky="w")
 
