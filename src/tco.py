@@ -1,6 +1,6 @@
 import tkinter as tk
 import pandas as pd
-import os
+from exporter import save_results_to_csv
 from charging import calculate_cic_km, calculate_charger_costs, calculate_ccph_depot, calculate_cycles
 from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
@@ -183,6 +183,7 @@ def open_tco_page(parent_frame, var_manager):
         bcls = var_manager.variables["bcls"]["value"]
         bcd = var_manager.variables["bcd"]["value"]
         type = var_manager.variables["type"]["value"]
+        type = int(type)
         dannum = var_manager.variables["dannum"]["value"]
         dmile = var_manager.variables["dmile"]["value"]
         y3tax = var_manager.variables["y3tax"]["value"]
@@ -322,7 +323,6 @@ def open_tco_page(parent_frame, var_manager):
         label_annual_kilometers_driven.config(text=f"{akm:.2f} km")
         
         
-        # TODO: Create a dataframe to contain all the data and save it to a file
         df = pd.DataFrame({
             "Category": ["Charging Costs", "Operational Costs", "Financing Costs", "Total"],
             "Per km": [charger_cost_per_km, maintenance_cost / akm, truck_financing / akm, total_cost_per_km],
@@ -330,25 +330,9 @@ def open_tco_page(parent_frame, var_manager):
             "Yearly": [cic, maintenance_cost, truck_financing, total_cost_yearly]
         })
 
-        # Save the DataFrame to a CSV file in the src/results directory named tco_results_Type1_1.csv then tco_results_Type1_2.csv etc.
-        # Use the type as part of the filename
-        type = var_manager.variables["type"]["value"]
+        # Save the results to a CSV file
         type = int(type)
-        results_dir = "src/results"
-        # Check if the directory exists, if not create it
-        if not os.path.exists(results_dir):
-            os.makedirs(results_dir)
-        # Check the type and create a subdirectory for each type
-        type_dir = os.path.join(results_dir, f"Type{type}")
-        if not os.path.exists(type_dir):
-            os.makedirs(type_dir)
-        # Save the file with a unique name based on the type and number of files already in the directory
-        # Count the number of files in the directory that start with tco_results_Type and end with .csv
-        # and add 1 to the count to create a unique name
-        file_count = len([f for f in os.listdir(type_dir) if f.startswith("tco_results_Type") and f.endswith(".csv")])
-        file_name = f"tco_results_Type{type}_{file_count + 1}.csv"
-        df.to_csv(os.path.join(type_dir, file_name), index=False)
-        print(f"Results saved to {file_name}")
+        save_results_to_csv(df, type)
 
 
     calculate_button = tk.Button(parent_frame, text="Calculate Costs", command=calculate_and_display_cic)
