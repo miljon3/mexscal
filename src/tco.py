@@ -370,12 +370,10 @@ def open_tco_page(parent_frame, var_manager):
         label_days_driven_per_year.config(text=f"{yu:.2f} days")
         label_annual_kilometers_driven.config(text=f"{akm:.2f} km")
         
-        # Charging costs, Operational costs, Finacing costs, Type, and Total Costs
+        # Export Type, Daily Driving Distance, Annual Kilometers Driven, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost, driver_cost_km, road_tax_km, truck_financing, battery_financing, total_cost_per_km, total_cost_monthly, total_cost_yearly
         df = pd.DataFrame({
-            "Category": ["Charging Costs", "Operational Costs", "Financing Costs", "Total"],
-            "Per km": [charger_cost_per_km, maintenance_cost / akm, truck_financing / akm, total_cost_per_km],
-            "Monthly": [cic / 12, maintenance_cost / 12, truck_financing / 12, total_cost_monthly],
-            "Yearly": [cic, maintenance_cost, truck_financing, total_cost_yearly]
+            "Category": ["Type", "Daily Driving Distance", "Annual Kilometers Driven", "Public Fast Charging Ratio", "Daily Range", "Daily Battery Capacity", "Daily Time", "Charger Cost per km", "Maintenance Cost per km", "Driver Cost per km", "Road Tax per km", "Truck Financing Cost per km", "Battery Financing Cost per km", "Total Cost per km", "Total Cost per month", "Total Cost per year"],
+            "Value": [typedict[type]["name"], daily_drive, akm, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost / akm, driver_cost_km, road_tax / akm, truck_financing / akm, battery_financing / akm, total_cost_per_km, total_cost_monthly, total_cost_yearly]
         })
 
         # Save the results to a CSV file

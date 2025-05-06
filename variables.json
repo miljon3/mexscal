@@ -85,7 +85,7 @@
         "unit":"%"
     },
     "type":{
-        "value":4.0,
+        "value":8.0,
         "name":"Type of usage",
         "unit":"1\/2\/3\/4"
     },
