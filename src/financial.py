@@ -32,5 +32,4 @@ def calculate_financing_cost(truck_cost, battery_cost, interest_rate, loan_term_
     
     # Total cost subtracting remaining value
     yearly_financing_cost = ((monthly_payment * number_of_payments) - (truck_value_remaining + battery_value_remaining))/loan_term_years
-    print(f"Total financing cost: {yearly_financing_cost:.2f} SEK")
     return yearly_financing_cost

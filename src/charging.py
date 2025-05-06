@@ -67,8 +67,9 @@ def calculate_cycles(r, km, cd):
     """
     print(f"Range: {r} km")
     print(f"Kilometers driven: {km} km")
-    print(f"Cycle discharge: {cd} %")
-    cycles = (km / r) * cd
+    # print(f"Cycle discharge: {cd} %")
+    # cycles = (km / r) * cd
+    cycles = (km / r)
     print(f"Total cycles: {cycles} cycles")
 
     return cycles

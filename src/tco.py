@@ -4,7 +4,7 @@ import os
 from charging import calculate_cic_km, calculate_charger_costs, calculate_ccph_depot, calculate_cycles
 from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
-from montecarlo import monte_carlo_sampling, return_totals
+from montecarlo import monte_carlo_sampling, return_totals, animate
 from routes import calculate_driver_cost, calculate_driver_cost_km
 from depreciation import residual_value
 
@@ -80,19 +80,19 @@ def open_tco_page(parent_frame, var_manager):
     label_road_tax_yearly.grid(row=7, column=3, padx=10, pady=2)
 
     label_financial_truck_km = tk.Label(grid_frame, text="N/A")
-    label_financial_truck_km.grid(row=8, column=1, padx=10, pady=2)
+    label_financial_truck_km.grid(row=9, column=1, padx=10, pady=2)
 
     label_financial_battery_km = tk.Label(grid_frame, text="N/A")
-    label_financial_battery_km.grid(row=9, column=1, padx=10, pady=2)
+    label_financial_battery_km.grid(row=10, column=1, padx=10, pady=2)
 
     label_total_per_km = tk.Label(grid_frame, text="N/A")
-    label_total_per_km.grid(row=10, column=1, padx=10, pady=5)
+    label_total_per_km.grid(row=11, column=1, padx=10, pady=5)
 
     label_total_monthly = tk.Label(grid_frame, text="N/A")
-    label_total_monthly.grid(row=10, column=2, padx=10, pady=5)
+    label_total_monthly.grid(row=11, column=2, padx=10, pady=5)
 
     label_total_yearly = tk.Label(grid_frame, text="N/A")
-    label_total_yearly.grid(row=10, column=3, padx=10, pady=5)
+    label_total_yearly.grid(row=11, column=3, padx=10, pady=5)
 
     """ Statistics frame for displaying the key assumptions the results are based on """
     # Headers
@@ -192,6 +192,8 @@ def open_tco_page(parent_frame, var_manager):
         daily_range = r * bcd
         daily_battery_capacity = bc * bcd
         simulated_data = monte_carlo_sampling(yu, type, daily_range)
+        """ Animation """
+        #animate(simulated_data)
         # Calculate the total distance driven and the number of charging stops
         akm, total_stops, total_hours = return_totals(simulated_data)
         total_stops = int(total_stops)
@@ -259,7 +261,7 @@ def open_tco_page(parent_frame, var_manager):
         # Financing
         # TODO: Tax and subsidy presentation logic for financing costs
         battery_cost = bc * battery_cost_per_kWh
-        tcls = calculate_cycles(r, akm, bcd) * lifespan
+        tcls = calculate_cycles(daily_range, akm, bcd) * lifespan
         # TODO: Check yearly logic of cycles, possibly adding ability to change type of usage
         print(f"Total cycles: {tcls}")
         financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, dconstant, bcls, tcls)
@@ -270,6 +272,7 @@ def open_tco_page(parent_frame, var_manager):
         bshare = battery_cost / (battery_cost + truck_cost)
         tshare = truck_cost / (battery_cost + truck_cost)
         battery_financing = financing_cost * bshare
+        print(f"Battery Financing Cost: {battery_financing:.2f} SEK")
         truck_financing = financing_cost * tshare
 
         """ Total costs are done below"""

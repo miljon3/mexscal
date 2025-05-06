@@ -24,10 +24,10 @@ def monte_carlo_sampling(num_days, type, max_range):
 
     # TODO: Check these numbers and add input for them
     params = {
-        1: (200, 50),    # Distribution
-        2: (300, 60),   # Regional Distribution
-        3: (450, 70),   # Long-range traffic
-        4: (600, 100),  # Nomadic
+        1: (160, 40),    # Distribution
+        2: (320, 80),   # Regional Distribution
+        3: (500, 125),   # Long-range traffic
+        4: (720, 180),  # Nomadic
     }
 
     if type not in params:
