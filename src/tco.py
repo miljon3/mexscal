@@ -237,8 +237,7 @@ def open_tco_page(parent_frame, var_manager):
         axles = var_manager.variables["axles"]["value"]
         # Run the Monte Carlo simulation
 
-        daily_range = calculate_daily_range(type, bc)
-
+        daily_range = calculate_daily_range(type, bc, typedict)
         daily_range = r * bcd
         daily_battery_capacity = bc * bcd
         simulated_data = monte_carlo_sampling(yu, type, daily_range)
