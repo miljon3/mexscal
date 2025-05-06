@@ -18,14 +18,14 @@ class VariableManager:
             "battery_cost_per_kWh": {"value": 2500.0, "name": "Battery cost per kWh", "unit": "Kr/kWh"},
             "mcpkm": {"value": 0.98, "name": "Maintenance cost per km", "unit": "Kr/km"},
             "subsidy": {"value": 0.25, "name": "Subsidy", "unit": "%"},
-            "chinco": {"value": 100000.0, "name": "Charger installation cost", "unit": "Kr"},
+            "chinco": {"value": 100000, "name": "Charger installation cost", "unit": "Kr"},
             "chutra": {"value": 0.4, "name": "Charger utilization rate", "unit": "%"},
             "eprice": {"value": 0.92, "name": "Electricity price", "unit": "Kr/kWh"},
             "yu": {"value": 250, "name": "Active days in a year", "unit": ""},
             "bcls": {"value": 5000, "name": "Battery Cycle Lifespan", "unit": "Cycles"},
             "bcd": {"value": 0.8, "name": "Battery Cycle Discharge", "unit": "%"},
             "type": {"value": 4, "name": "Type of usage", "unit": "1/2/3/4"},
-            "dmile": {"value": 0.0001, "name": "Depreciation Mileage", "unit": ""},
+            "dmile": {"value": 6.25e-8, "name": "Depreciation Mileage", "unit": ""},
             "dannum": {"value": 0.2, "name": "Depreciation Year", "unit": ""},
 
         }
@@ -49,11 +49,6 @@ class VariableManager:
             return True
         except ValueError:
             return False
-    
-    def adjust_variable(self, var_name, adjustment):
-        self.variables[var_name]["value"] = round(self.variables[var_name]["value"] * adjustment, 3)
-        self.save_variables()
-        return self.variables[var_name]["value"]
 
 def open_variable_editor_in_main_window(root, var_manager):
     for widget in root.winfo_children():
@@ -66,35 +61,40 @@ def open_variable_editor_in_main_window(root, var_manager):
     field_width = 15
 
     for var_name, info in var_manager.variables.items():
+        # Add skip for type variable
         if var_name == "type":
-            continue  # Skip for now, we'll render it separately
+            continue
 
         frame = tk.Frame(root)
         frame.grid(row=row, column=col, padx=10, pady=5, sticky="w")
 
         label_var = tk.StringVar()
-        label_var.set(f"{info['name']}: {info['value']} {info['unit']}")
+        # If unit is % use a .2% format, else use integer format, or if it's a float use .3f format
+        if info['unit'] == "%":
+            label_var.set(f"{info['name']}: {info['value']:.2%} {info['unit']}")
+        elif isinstance(info['value'], int):
+            label_var.set(f"{info['name']}: {info['value']} {info['unit']}")
+        else:
+            label_var.set(f"{info['name']}: {info['value']:.3f} {info['unit']}")
         label = tk.Label(frame, textvariable=label_var, anchor="w", width=field_width*2)
         label.grid(row=0, column=0, columnspan=3, sticky="w")
 
         entry = tk.Entry(frame, width=field_width)
         entry.grid(row=1, column=0, columnspan=3, padx=5, sticky="ew")
-        entry.insert(0, str(info['value']))
+        # Display the percentage, float or int value in the entry field
+        if info['unit'] == "%":
+            entry.insert(0, f"{info['value'] * 100:.2f}")
+        elif isinstance(info['value'], int):
+            entry.insert(0, str(info['value']))
+        else:
+            entry.insert(0, f"{info['value']:.3f}")
 
         button_frame = tk.Frame(frame)
         button_frame.grid(row=2, column=0, columnspan=3, sticky="ew")
 
-        button_minus_25 = tk.Button(button_frame, text="-25%", width=5,
-                                    command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 0.75))
-        button_minus_25.pack(side='left', expand=True, padx=2)
-
         button_update = tk.Button(button_frame, text="Update", width=8,
                                   command=lambda v=var_name, e=entry, lv=label_var: handle_update(v, e, lv, var_manager))
         button_update.pack(side='left', expand=True, padx=2)
-
-        button_plus_25 = tk.Button(button_frame, text="+25%", width=5,
-                                   command=lambda v=var_name, e=entry, lv=label_var: handle_adjust(v, e, lv, var_manager, 1.25))
-        button_plus_25.pack(side='left', expand=True, padx=2)
 
         entries[var_name] = (entry, label_var)
 
@@ -130,16 +130,16 @@ def open_variable_editor_in_main_window(root, var_manager):
     type_update_btn.grid(row=1, column=1, padx=5, sticky="w")
 
 
-
 def handle_update(var_name, entry_field, label_var, var_manager):
-    if var_manager.update_variable(var_name, entry_field.get()):
-        label_var.set(f"{var_manager.variables[var_name]['name']}: {var_manager.variables[var_name]['value']} {var_manager.variables[var_name]['unit']}")
-        messagebox.showinfo("Success", f"{var_manager.variables[var_name]['name']} updated successfully!")
-    else:
+    raw_value = entry_field.get()
+    try:
+        value = float(raw_value)
+        if var_manager.variables[var_name]['unit'] == "%":
+            value /= 100  # Convert to decimal form
+        if var_manager.update_variable(var_name, value):
+            label_var.set(f"{var_manager.variables[var_name]['name']}: {var_manager.variables[var_name]['value']} {var_manager.variables[var_name]['unit']}")
+            messagebox.showinfo("Success", f"{var_manager.variables[var_name]['name']} updated successfully!")
+        else:
+            messagebox.showerror("Error", "Please enter a valid number.")
+    except ValueError:
         messagebox.showerror("Error", "Please enter a valid number.")
-
-def handle_adjust(var_name, entry_field, label_var, var_manager, adjustment):
-    new_value = var_manager.adjust_variable(var_name, adjustment)
-    label_var.set(f"{var_manager.variables[var_name]['name']}: {new_value} {var_manager.variables[var_name]['unit']}")
-    entry_field.delete(0, tk.END)
-    entry_field.insert(0, str(new_value))

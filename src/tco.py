@@ -1,4 +1,6 @@
 import tkinter as tk
+import pandas as pd
+import os
 from charging import calculate_cic_km, calculate_charger_costs, calculate_ccph_depot, calculate_cycles
 from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
@@ -15,6 +17,11 @@ def open_tco_page(parent_frame, var_manager):
 
     grid_frame = tk.Frame(parent_frame)
     grid_frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+    stat_frame = tk.Frame(parent_frame)
+    stat_frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+    """ Grid frame for displaying the results """
 
     # Headers
     tk.Label(grid_frame, text="Category").grid(row=0, column=0, padx=10, pady=5, sticky="w")
@@ -36,9 +43,6 @@ def open_tco_page(parent_frame, var_manager):
     tk.Label(grid_frame, text="   - Battery").grid(row=9, column=0, padx=10, pady=2, sticky="w")
 
     tk.Label(grid_frame, text="Total").grid(row=10, column=0, padx=10, pady=5, sticky="w")
-
-    # Labels for showing results of monte carlo simulation
-    tk.Label(grid_frame, text="Annual Kilometers Driven").grid(row=11, column=0, padx=10, pady=5, sticky="w")
 
     # Subcategory labels
     label_charger_cost_km = tk.Label(grid_frame, text="N/A")
@@ -80,8 +84,70 @@ def open_tco_page(parent_frame, var_manager):
     label_total_yearly = tk.Label(grid_frame, text="N/A")
     label_total_yearly.grid(row=10, column=3, padx=10, pady=5)
 
-    label_total_km = tk.Label(grid_frame, text="N/A")
-    label_total_km.grid(row=11, column=1, padx=10, pady=5)
+    """ Statistics frame for displaying the key assumptions the results are based on """
+    # Headers
+    tk.Label(stat_frame, text="Key Assumptions").grid(row=0, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(stat_frame, text="Value").grid(row=0, column=1, padx=10, pady=5)
+
+    # Main categories & subcategories
+    tk.Label(stat_frame, text="Battery").grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(stat_frame, text="   - Battery Cost").grid(row=2, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Battery Capacity").grid(row=3, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Daily Range").grid(row=4, column=0, padx=10, pady=2, sticky="w")
+
+    tk.Label(stat_frame, text="Truck").grid(row=5, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Truck Cost").grid(row=6, column=0, padx=10, pady=2, sticky="w")
+
+    tk.Label(stat_frame, text="Environment").grid(row=7, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Energy Price").grid(row=8, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Interest Rate").grid(row=9, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Lifespan").grid(row=10, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Subsidy").grid(row=11, column=0, padx=10, pady=2, sticky="w")
+
+    tk.Label(stat_frame, text="Routes").grid(row=12, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Daily Driving Distance").grid(row=13, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Daily Driving Time").grid(row=14, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Days driven per year").grid(row=15, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Annual Kilometers Driven").grid(row=16, column=0, padx=10, pady=2, sticky="w")
+
+    # For every Label in the grid, create a label to display the value
+
+    label_battery_cost = tk.Label(stat_frame, text="N/A")
+    label_battery_cost.grid(row=2, column=1, padx=10, pady=2)
+
+    label_battery_capacity = tk.Label(stat_frame, text="N/A")
+    label_battery_capacity.grid(row=3, column=1, padx=10, pady=2)
+
+    label_daily_range = tk.Label(stat_frame, text="N/A")
+    label_daily_range.grid(row=4, column=1, padx=10, pady=2)
+
+    label_truck_cost = tk.Label(stat_frame, text="N/A")
+    label_truck_cost.grid(row=6, column=1, padx=10, pady=2)
+
+    label_energy_price = tk.Label(stat_frame, text="N/A")
+    label_energy_price.grid(row=8, column=1, padx=10, pady=2)
+
+    label_interest_rate = tk.Label(stat_frame, text="N/A")
+    label_interest_rate.grid(row=9, column=1, padx=10, pady=2)
+
+    label_lifespan = tk.Label(stat_frame, text="N/A")
+    label_lifespan.grid(row=10, column=1, padx=10, pady=2)
+
+    label_subsidy = tk.Label(stat_frame, text="N/A")
+    label_subsidy.grid(row=11, column=1, padx=10, pady=2)
+
+    label_daily_driving_distance = tk.Label(stat_frame, text="N/A")
+    label_daily_driving_distance.grid(row=13, column=1, padx=10, pady=2)
+
+    label_daily_driving_time = tk.Label(stat_frame, text="N/A")
+    label_daily_driving_time.grid(row=14, column=1, padx=10, pady=2)
+
+    label_days_driven_per_year = tk.Label(stat_frame, text="N/A")
+    label_days_driven_per_year.grid(row=15, column=1, padx=10, pady=2)
+
+    label_annual_kilometers_driven = tk.Label(stat_frame, text="N/A")
+    label_annual_kilometers_driven.grid(row=16, column=1, padx=10, pady=2)
+
 
     def calculate_and_display_cic():
         """ Variables """
@@ -120,6 +186,10 @@ def open_tco_page(parent_frame, var_manager):
         print(f"Total distance driven: {akm} km")
         print(f"Total stops: {total_stops}")
         print(f"Total hours: {total_hours}")
+        daily_drive = akm / yu
+        daily_time = total_hours / yu
+        print(f"Daily driving time: {daily_time:.2f} hours")
+        print(f"Daily driving distance: {daily_drive:.2f} km")
 
         # Use total stops to calculate the ratio dcr and pfcr. (Public fast charging stops / total stops + depot stops (one a day))
         # If nomadic driving, we never charge at depot, so dcr = 0 and pfcr = 1
@@ -221,9 +291,49 @@ def open_tco_page(parent_frame, var_manager):
         label_total_monthly.config(text=f"{total_cost_monthly:.2f} SEK")
         label_total_yearly.config(text=f"{total_cost_yearly:.2f} SEK")
 
-        label_total_km.config(text=f"{akm:.2f} km")
 
+        """ Display the key assumptions """
+        label_battery_cost.config(text=f"{battery_cost:.2f} SEK")
+        label_battery_capacity.config(text=f"{bc:.2f} kWh")
+        label_daily_range.config(text=f"{daily_range:.2f} km")
+        label_truck_cost.config(text=f"{truck_cost:.2f} SEK")
+        label_energy_price.config(text=f"{eprice:.2f} SEK/kWh")
+        label_interest_rate.config(text=f"{interest_rate:.2%}")
+        label_lifespan.config(text=f"{lifespan:.2f} years")
+        label_subsidy.config(text=f"{subsidy:.2%}")
+        label_daily_driving_distance.config(text=f"{daily_drive:.2f} km")
+        label_daily_driving_time.config(text=f"{daily_time:.2f} hours")
+        label_days_driven_per_year.config(text=f"{yu:.2f} days")
+        label_annual_kilometers_driven.config(text=f"{akm:.2f} km")
+        
+        
         # TODO: Create a dataframe to contain all the data and save it to a file
+        df = pd.DataFrame({
+            "Category": ["Charging Costs", "Operational Costs", "Financing Costs", "Total"],
+            "Per km": [charger_cost_per_km, maintenance_cost / akm, truck_financing / akm, total_cost_per_km],
+            "Monthly": [cic / 12, maintenance_cost / 12, truck_financing / 12, total_cost_monthly],
+            "Yearly": [cic, maintenance_cost, truck_financing, total_cost_yearly]
+        })
+
+        # Save the DataFrame to a CSV file in the src/results directory named tco_results_Type1_1.csv then tco_results_Type1_2.csv etc.
+        # Use the type as part of the filename
+        type = var_manager.variables["type"]["value"]
+        type = int(type)
+        results_dir = "src/results"
+        # Check if the directory exists, if not create it
+        if not os.path.exists(results_dir):
+            os.makedirs(results_dir)
+        # Check the type and create a subdirectory for each type
+        type_dir = os.path.join(results_dir, f"Type{type}")
+        if not os.path.exists(type_dir):
+            os.makedirs(type_dir)
+        # Save the file with a unique name based on the type and number of files already in the directory
+        # Count the number of files in the directory that start with tco_results_Type and end with .csv
+        # and add 1 to the count to create a unique name
+        file_count = len([f for f in os.listdir(type_dir) if f.startswith("tco_results_Type") and f.endswith(".csv")])
+        file_name = f"tco_results_Type{type}_{file_count + 1}.csv"
+        df.to_csv(os.path.join(type_dir, file_name), index=False)
+        print(f"Results saved to {file_name}")
 
 
     calculate_button = tk.Button(parent_frame, text="Calculate Costs", command=calculate_and_display_cic)

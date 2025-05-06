@@ -10,7 +10,7 @@
         "unit":"years"
     },
     "interest_rate":{
-        "value":0.06,
+        "value":0.05,
         "name":"Interest Rate",
         "unit":"%"
     },
@@ -20,7 +20,7 @@
         "unit":"kWh"
     },
     "ccph_fast":{
-        "value":4.5,
+        "value":4.0,
         "name":"Public fast charger cost",
         "unit":"Kr\/kWh"
     },
@@ -45,7 +45,7 @@
         "unit":"Kr\/km"
     },
     "subsidy":{
-        "value":0.25,
+        "value":0.2,
         "name":"Subsidy",
         "unit":"%"
     },

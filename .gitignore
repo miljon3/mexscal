@@ -1,3 +1,7 @@
 .vscode
 __pycache__
 *.pyc
+src/results/Type1/*.csv
+src/results/Type2/*.csv
+src/results/Type3/*.csv
+src/results/Type4/*.csv
