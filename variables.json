@@ -16,8 +16,8 @@
     },
     "bc":{
         "value":524.0,
-        "name":"Battery capacity",
-        "unit":"kWh"
+        "name":"Battery capacity \/ fuel capacity",
+        "unit":"kWh \/ litres"
     },
     "ccph_fast":{
         "value":4.0,
@@ -85,7 +85,7 @@
         "unit":"%"
     },
     "type":{
-        "value":8.0,
+        "value":4.0,
         "name":"Type of usage",
         "unit":"1\/2\/3\/4"
     },
