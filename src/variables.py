@@ -27,6 +27,9 @@ class VariableManager:
             "type": {"value": 4, "name": "Type of usage", "unit": "1/2/3/4"},
             "dmile": {"value": 6.25e-8, "name": "Depreciation Mileage", "unit": ""},
             "dannum": {"value": 0.2, "name": "Depreciation Year", "unit": ""},
+            "y3tax": {"value": 2161, "name": "Yearly Road Tax 3 or less Axles", "unit": "Kr"},
+            "y4tax": {"value": 3609, "name": "Yearly Road Tax 4 or more Axles", "unit": "Kr"},
+            "axles": {"value": 3, "name": "Number of Axles", "unit": ""},
 
         }
         self.load_variables()

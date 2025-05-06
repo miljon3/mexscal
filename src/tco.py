@@ -37,12 +37,13 @@ def open_tco_page(parent_frame, var_manager):
     tk.Label(grid_frame, text="Operational Costs").grid(row=4, column=0, padx=10, pady=5, sticky="w")
     tk.Label(grid_frame, text="   - Maintenance").grid(row=5, column=0, padx=10, pady=2, sticky="w")
     tk.Label(grid_frame, text="   - Driver").grid(row=6, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(grid_frame, text="   - Road Tax").grid(row=7, column=0, padx=10, pady=2, sticky="w")
 
-    tk.Label(grid_frame, text="Financing Costs").grid(row=7, column=0, padx=10, pady=5, sticky="w")
-    tk.Label(grid_frame, text="   - Truck").grid(row=8, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(grid_frame, text="   - Battery").grid(row=9, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(grid_frame, text="Financing Costs").grid(row=8, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(grid_frame, text="   - Truck").grid(row=9, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(grid_frame, text="   - Battery").grid(row=10, column=0, padx=10, pady=2, sticky="w")
 
-    tk.Label(grid_frame, text="Total").grid(row=10, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(grid_frame, text="Total").grid(row=11, column=0, padx=10, pady=5, sticky="w")
 
     # Subcategory labels
     label_charger_cost_km = tk.Label(grid_frame, text="N/A")
@@ -68,6 +69,15 @@ def open_tco_page(parent_frame, var_manager):
 
     label_driver_yearly = tk.Label(grid_frame, text="N/A")
     label_driver_yearly.grid(row=6, column=3, padx=10, pady=2)
+
+    label_road_tax_km = tk.Label(grid_frame, text="N/A")
+    label_road_tax_km.grid(row=7, column=1, padx=10, pady=2)
+
+    label_road_tax_monthly = tk.Label(grid_frame, text="N/A")
+    label_road_tax_monthly.grid(row=7, column=2, padx=10, pady=2)
+
+    label_road_tax_yearly = tk.Label(grid_frame, text="N/A")
+    label_road_tax_yearly.grid(row=7, column=3, padx=10, pady=2)
 
     label_financial_truck_km = tk.Label(grid_frame, text="N/A")
     label_financial_truck_km.grid(row=8, column=1, padx=10, pady=2)
@@ -175,6 +185,9 @@ def open_tco_page(parent_frame, var_manager):
         type = var_manager.variables["type"]["value"]
         dannum = var_manager.variables["dannum"]["value"]
         dmile = var_manager.variables["dmile"]["value"]
+        y3tax = var_manager.variables["y3tax"]["value"]
+        y4tax = var_manager.variables["y4tax"]["value"]
+        axles = var_manager.variables["axles"]["value"]
         # Run the Monte Carlo simulation
         daily_range = r * bcd
         daily_battery_capacity = bc * bcd
@@ -184,8 +197,6 @@ def open_tco_page(parent_frame, var_manager):
         total_stops = int(total_stops)
         total_hours = int(total_hours)
         print(f"Total distance driven: {akm} km")
-        print(f"Total stops: {total_stops}")
-        print(f"Total hours: {total_hours}")
         daily_drive = akm / yu
         daily_time = total_hours / yu
         print(f"Daily driving time: {daily_time:.2f} hours")
@@ -228,10 +239,11 @@ def open_tco_page(parent_frame, var_manager):
        
 
         """ Financial Costs"""
-
-        # Taxes
-
         # TODO: Road tax
+        if axles <= 3:
+            road_tax = y3tax
+        else:
+            road_tax = y4tax
 
         # TODO: Depreciation by distance and time for the truck, battery already done
         mileage = akm * lifespan
@@ -241,11 +253,7 @@ def open_tco_page(parent_frame, var_manager):
         dannum = 0.2
         remaining_value = residual_value(truck_cost, dannum, dmile, lifespan, mileage)
         dconstant = (remaining_value) / truck_cost
-        print(f"Depreciation Constant: {dconstant:.2f}")
         print(f"Remaining Value: {remaining_value:.2f} SEK")
-
-
-
 
 
         # Financing
@@ -283,6 +291,10 @@ def open_tco_page(parent_frame, var_manager):
         label_driver_km.config(text=f"{driver_cost_km:.2f} SEK/km")
         label_driver_monthly.config(text=f"{driver_cost_yearly / 12:.2f} SEK")
         label_driver_yearly.config(text=f"{driver_cost_yearly:.2f} SEK")
+
+        label_road_tax_km.config(text=f"{road_tax / akm:.2f} SEK/km")
+        label_road_tax_monthly.config(text=f"{road_tax / 12:.2f} SEK")
+        label_road_tax_yearly.config(text=f"{road_tax:.2f} SEK")
 
         label_financial_truck_km.config(text=f"{truck_financing / akm:.2f} SEK/km")
         label_financial_battery_km.config(text=f"{battery_financing / akm:.2f} SEK/km")

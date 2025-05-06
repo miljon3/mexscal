@@ -65,7 +65,7 @@
         "unit":"Kr\/kWh"
     },
     "yu":{
-        "value":300.0,
+        "value":220.0,
         "name":"Active days in a year",
         "unit":""
     },
@@ -92,6 +92,21 @@
     "dannum":{
         "value":0.1,
         "name":"Depreciation Year",
+        "unit":""
+    },
+    "y3tax":{
+        "value":2161,
+        "name":"Yearly Road Tax 3 or less Axles",
+        "unit":"Kr"
+    },
+    "y4tax":{
+        "value":3609,
+        "name":"Yearly Road Tax 4 or more Axles",
+        "unit":"Kr"
+    },
+    "axles":{
+        "value":3,
+        "name":"Number of Axles",
         "unit":""
     }
 }

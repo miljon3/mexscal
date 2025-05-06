@@ -4,7 +4,7 @@ def calculate_driver_cost(total_hours, driver_cost_per_hour):
     
     :param total_hours: Total hours driven
     :param driver_cost_per_hour: Driver cost per hour [SEK]
-    :return: Driver cost per kilometer [SEK/km]
+    :return: Driver cost per year [SEK]
     """
     return (total_hours * driver_cost_per_hour)
 
