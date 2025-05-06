@@ -7,6 +7,7 @@ from financial import calculate_financing_cost
 from montecarlo import monte_carlo_sampling, return_totals, animate
 from routes import calculate_driver_cost, calculate_driver_cost_km
 from depreciation import residual_value
+from range import calculate_daily_range
 
 def open_tco_page(parent_frame, var_manager):
     for widget in parent_frame.winfo_children():
@@ -170,6 +171,7 @@ def open_tco_page(parent_frame, var_manager):
         """ akm should be done by mc, uncomment otherwise"""
         #akm = var_manager.variables["akm"]["value"]
         mckpm = var_manager.variables["mcpkm"]["value"]
+        tire_factor = var_manager.variables["tire_factor"]["value"]
         truck_cost = var_manager.variables["truck_cost"]["value"]
         battery_cost_per_kWh = var_manager.variables["battery_cost_per_kWh"]["value"]
         lifespan = var_manager.variables["lifespan"]["value"]
@@ -190,6 +192,9 @@ def open_tco_page(parent_frame, var_manager):
         y4tax = var_manager.variables["y4tax"]["value"]
         axles = var_manager.variables["axles"]["value"]
         # Run the Monte Carlo simulation
+
+        daily_range = calculate_daily_range(type, bc)
+
         daily_range = r * bcd
         daily_battery_capacity = bc * bcd
         simulated_data = monte_carlo_sampling(yu, type, daily_range)
@@ -233,7 +238,7 @@ def open_tco_page(parent_frame, var_manager):
         """ Operational costs """
 
         # Maintenance
-        maintenance_cost = calculate_maintenance_cost(mckpm, akm)
+        maintenance_cost = calculate_maintenance_cost(mckpm, tire_factor, akm)
 
         # Driver
         driver_cost_yearly = calculate_driver_cost(total_hours, cost_driver_hourly)

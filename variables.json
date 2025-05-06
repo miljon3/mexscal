@@ -44,6 +44,11 @@
         "name":"Maintenance cost per km",
         "unit":"Kr\/km"
     },
+    "tire_factor":{
+        "value":0.0,
+        "name":"Increased tire wear for BET",
+        "unit":"%"
+    },
     "subsidy":{
         "value":0.2,
         "name":"Subsidy",
