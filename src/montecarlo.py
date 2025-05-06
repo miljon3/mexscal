@@ -25,9 +25,13 @@ def monte_carlo_sampling(num_days, type, max_range):
     # TODO: Check these numbers and add input for them
     params = {
         1: (160, 40),    # Distribution
-        2: (320, 80),   # Regional Distribution
-        3: (500, 125),   # Long-range traffic
-        4: (720, 180),  # Nomadic
+        2: (160, 40),    # Distribution
+        3: (320, 80),    # Regional Distribution
+        4: (320, 80),    # Regional Distribution
+        5: (500, 125),   # Long-range traffic
+        6: (500, 125),   # Long-range traffic
+        7: (720, 180),   # Nomadic
+        8: (720, 180),   # Nomadic
     }
 
     if type not in params:
@@ -54,9 +58,13 @@ def monte_carlo_sampling(num_days, type, max_range):
     # Define max hours and speed per type
     type_info = {
         1: (9, 25),
-        2: (9, 40),
-        3: (10, 60),
-        4: (10, 70)
+        2: (9, 25),
+        3: (9, 40),
+        4: (9, 40),
+        5: (10, 60),
+        6: (10, 60),
+        7: (10, 70),
+        8: (10, 70)
     }
 
     max_hours, avg_speed = type_info[type]

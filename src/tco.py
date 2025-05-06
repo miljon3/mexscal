@@ -8,6 +8,7 @@ from montecarlo import monte_carlo_sampling, return_totals, animate
 from routes import calculate_driver_cost, calculate_driver_cost_km
 from depreciation import residual_value
 from range import calculate_daily_range
+from discount import discount
 
 def open_tco_page(parent_frame, var_manager):
     for widget in parent_frame.winfo_children():
@@ -303,7 +304,7 @@ def open_tco_page(parent_frame, var_manager):
         dmile = 6.25e-8
         dannum = 0.2
         remaining_value = residual_value(truck_cost, dannum, dmile, lifespan, mileage)
-        dconstant = (remaining_value) / truck_cost
+        # dconstant = (remaining_value) / truck_cost
         print(f"Remaining Value: {remaining_value:.2f} SEK")
 
 
@@ -313,7 +314,8 @@ def open_tco_page(parent_frame, var_manager):
         tcls = calculate_cycles(daily_range, akm, bcd) * lifespan
         # TODO: Check yearly logic of cycles, possibly adding ability to change type of usage
         print(f"Total cycles: {tcls}")
-        financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy, dconstant, bcls, tcls)
+        financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy)
+
 
         print(f"Financing Cost: {financing_cost:.2f} SEK")
 
@@ -324,12 +326,25 @@ def open_tco_page(parent_frame, var_manager):
         print(f"Battery Financing Cost: {battery_financing:.2f} SEK")
         truck_financing = financing_cost * tshare
 
+
+        # Residual values
+        battery_value_remaining = battery_cost * (1 - tcls / bcls)
+        total_residual_value = remaining_value + battery_value_remaining
+        print(remaining_value)
+        print(f"Total Residual Value: {total_residual_value:.2f} SEK")
         """ Total costs are done below"""
 
         # Totals
         total_cost_yearly = cic + maintenance_cost + financing_cost + driver_cost_yearly
+        ### TCO ###
+        TCO = discount(total_cost_yearly, 0.07, lifespan) - total_residual_value / ((1 + 0.07) ** lifespan)
+        ### TCO ###
+        print(f"Total Cost of Ownership: {TCO:.2f} SEK")
+        TCO_KM = TCO / (akm * lifespan)
+        print(f"Total Cost of Ownership per km: {TCO_KM:.2f} SEK/km")
         total_cost_monthly = total_cost_yearly / 12
         total_cost_per_km = total_cost_yearly / akm
+        print(f"Total Cost of Ownership per km (not discounted): {total_cost_per_km:.2f} SEK/km")
 
         # Fixed charging cost per km
         charger_cost_per_km = cic_km
@@ -382,4 +397,4 @@ def open_tco_page(parent_frame, var_manager):
 
 
     calculate_button = tk.Button(parent_frame, text="Calculate Costs", command=calculate_and_display_cic)
-    calculate_button.pack(pady=10)
+    calculate_button.pack(pady=10, anchor="n") 
