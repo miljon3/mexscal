@@ -186,6 +186,50 @@ def open_tco_page(parent_frame, var_manager):
         bcd = var_manager.variables["bcd"]["value"]
         type = var_manager.variables["type"]["value"]
         type = int(type)
+        # Dictionary containing variables for the different types
+        typedict = {
+            1: {
+                "name": "Distribution",
+                "weight": "54",
+                "fuel": "Electric"
+            },
+            2: {
+                "name": "Regional Distribution",
+                "weight": "54",
+                "fuel": "Electric"
+            },
+            3: {
+                "name": "Long Range Traffic",
+                "weight": "76",
+                "fuel": "Electric"
+            },
+            4: {
+                "name": "Nomadic",
+                "weight": "76",
+                "fuel": "Electric"
+            },
+            5: {
+                "name": "Distribution (diesel)",
+                "weight": "54",
+                "fuel": "Diesel"
+            },
+            6: {
+                "name": "Regional Distribution (diesel)",
+                "weight": "54",
+                "fuel": "Diesel"
+            },
+            7: {
+                "name": "Long Range Traffic (diesel)",
+                "weight": "76",
+                "fuel": "Diesel"
+            },
+            8: {
+                "name": "Nomadic (diesel)",
+                "weight": "76",
+                "fuel": "Diesel"
+            }
+        }
+
         dannum = var_manager.variables["dannum"]["value"]
         dmile = var_manager.variables["dmile"]["value"]
         y3tax = var_manager.variables["y3tax"]["value"]
@@ -327,7 +371,7 @@ def open_tco_page(parent_frame, var_manager):
         label_days_driven_per_year.config(text=f"{yu:.2f} days")
         label_annual_kilometers_driven.config(text=f"{akm:.2f} km")
         
-        
+        # Charging costs, Operational costs, Finacing costs, Type, and Total Costs
         df = pd.DataFrame({
             "Category": ["Charging Costs", "Operational Costs", "Financing Costs", "Total"],
             "Per km": [charger_cost_per_km, maintenance_cost / akm, truck_financing / akm, total_cost_per_km],
