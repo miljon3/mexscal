@@ -7,10 +7,12 @@ def calculate_daily_range(type, bc, type_dict):
     :return: r: daily range in km
     """
     weight = int(type_dict[type]["weight"]) * 1000
-    if type == 1 or type == 2:
+    # ICT 5-8
+    if type in range(5, 9):
         consumption = 0.0903*math.log(weight) -0.6404
-        range = bc / consumption
-    elif type == 3 or type == 4:
+        r = bc / consumption
+    # BET 1-4
+    elif type in range(1, 5):
         consumption = 0.3814*math.log(weight) -2.6735
-        range = bc / consumption
-    return range
+        r = bc / consumption
+    return r
