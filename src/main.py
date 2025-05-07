@@ -5,7 +5,7 @@ from results import open_stats_page
 
 root = tk.Tk()
 root.title("Main Application")
-root.geometry("1400x1000")
+root.geometry("1800x1400")
 
 var_manager = VariableManager()
 

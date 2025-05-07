@@ -96,69 +96,42 @@ def open_tco_page(parent_frame, var_manager):
     label_total_yearly = tk.Label(grid_frame, text="N/A")
     label_total_yearly.grid(row=11, column=3, padx=10, pady=5)
 
-    """ Statistics frame for displaying the key assumptions the results are based on """
-    # Headers
-    tk.Label(stat_frame, text="Key Assumptions").grid(row=0, column=0, padx=10, pady=5, sticky="w")
-    tk.Label(stat_frame, text="Value").grid(row=0, column=1, padx=10, pady=5)
-
     # Main categories & subcategories
-    tk.Label(stat_frame, text="Battery").grid(row=1, column=0, padx=10, pady=5, sticky="w")
-    tk.Label(stat_frame, text="   - Battery Cost").grid(row=2, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Battery Capacity").grid(row=3, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Daily Range").grid(row=4, column=0, padx=10, pady=2, sticky="w")
-
-    tk.Label(stat_frame, text="Truck").grid(row=5, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Truck Cost").grid(row=6, column=0, padx=10, pady=2, sticky="w")
-
-    tk.Label(stat_frame, text="Environment").grid(row=7, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Energy Price").grid(row=8, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Interest Rate").grid(row=9, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Lifespan").grid(row=10, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Subsidy").grid(row=11, column=0, padx=10, pady=2, sticky="w")
-
-    tk.Label(stat_frame, text="Routes").grid(row=12, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Daily Driving Distance").grid(row=13, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Daily Driving Time").grid(row=14, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Days driven per year").grid(row=15, column=0, padx=10, pady=2, sticky="w")
-    tk.Label(stat_frame, text="   - Annual Kilometers Driven").grid(row=16, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="Truck").grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(stat_frame, text="   - Truck Cost").grid(row=2, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Battery Cost").grid(row=3, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Battery Capacity").grid(row=4, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Daily Range").grid(row=5, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Daily Driving Distance").grid(row=6, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Daily Driving Time").grid(row=7, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Days driven per year").grid(row=8, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Annual Kilometers Driven").grid(row=9, column=0, padx=10, pady=2, sticky="w")
 
     # For every Label in the grid, create a label to display the value
 
+    label_truck_cost = tk.Label(stat_frame, text="N/A")
+    label_truck_cost.grid(row=2, column=1, padx=10, pady=2)
+
     label_battery_cost = tk.Label(stat_frame, text="N/A")
-    label_battery_cost.grid(row=2, column=1, padx=10, pady=2)
+    label_battery_cost.grid(row=3, column=1, padx=10, pady=2)
 
     label_battery_capacity = tk.Label(stat_frame, text="N/A")
-    label_battery_capacity.grid(row=3, column=1, padx=10, pady=2)
+    label_battery_capacity.grid(row=4, column=1, padx=10, pady=2)
 
     label_daily_range = tk.Label(stat_frame, text="N/A")
-    label_daily_range.grid(row=4, column=1, padx=10, pady=2)
-
-    label_truck_cost = tk.Label(stat_frame, text="N/A")
-    label_truck_cost.grid(row=6, column=1, padx=10, pady=2)
-
-    label_energy_price = tk.Label(stat_frame, text="N/A")
-    label_energy_price.grid(row=8, column=1, padx=10, pady=2)
-
-    label_interest_rate = tk.Label(stat_frame, text="N/A")
-    label_interest_rate.grid(row=9, column=1, padx=10, pady=2)
-
-    label_lifespan = tk.Label(stat_frame, text="N/A")
-    label_lifespan.grid(row=10, column=1, padx=10, pady=2)
-
-    label_subsidy = tk.Label(stat_frame, text="N/A")
-    label_subsidy.grid(row=11, column=1, padx=10, pady=2)
+    label_daily_range.grid(row=5, column=1, padx=10, pady=2)
 
     label_daily_driving_distance = tk.Label(stat_frame, text="N/A")
-    label_daily_driving_distance.grid(row=13, column=1, padx=10, pady=2)
+    label_daily_driving_distance.grid(row=6, column=1, padx=10, pady=2)
 
     label_daily_driving_time = tk.Label(stat_frame, text="N/A")
-    label_daily_driving_time.grid(row=14, column=1, padx=10, pady=2)
+    label_daily_driving_time.grid(row=7, column=1, padx=10, pady=2)
 
     label_days_driven_per_year = tk.Label(stat_frame, text="N/A")
-    label_days_driven_per_year.grid(row=15, column=1, padx=10, pady=2)
+    label_days_driven_per_year.grid(row=8, column=1, padx=10, pady=2)
 
     label_annual_kilometers_driven = tk.Label(stat_frame, text="N/A")
-    label_annual_kilometers_driven.grid(row=16, column=1, padx=10, pady=2)
+    label_annual_kilometers_driven.grid(row=9, column=1, padx=10, pady=2)
 
 
     def calculate_and_display_cic():
@@ -376,10 +349,6 @@ def open_tco_page(parent_frame, var_manager):
         label_battery_capacity.config(text=f"{bc:.2f} kWh")
         label_daily_range.config(text=f"{daily_range:.2f} km")
         label_truck_cost.config(text=f"{truck_cost:.2f} SEK")
-        label_energy_price.config(text=f"{eprice:.2f} SEK/kWh")
-        label_interest_rate.config(text=f"{interest_rate:.2%}")
-        label_lifespan.config(text=f"{lifespan:.2f} years")
-        label_subsidy.config(text=f"{subsidy:.2%}")
         label_daily_driving_distance.config(text=f"{daily_drive:.2f} km")
         label_daily_driving_time.config(text=f"{daily_time:.2f} hours")
         label_days_driven_per_year.config(text=f"{yu:.2f} days")
