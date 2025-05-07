@@ -14,9 +14,6 @@ def open_tco_page(parent_frame, var_manager):
     for widget in parent_frame.winfo_children():
         widget.destroy()
 
-    title_label = tk.Label(parent_frame, text="Total Cost of Ownership (TCO) Analysis")
-    title_label.pack(pady=10)
-
     grid_frame = tk.Frame(parent_frame)
     grid_frame.pack(pady=10, padx=10, fill="both", expand=True)
 

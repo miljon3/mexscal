@@ -5,7 +5,7 @@ from results import open_stats_page
 
 root = tk.Tk()
 root.title("Main Application")
-root.geometry("1800x1400")
+root.geometry("1600x1200")
 
 var_manager = VariableManager()
 
@@ -25,9 +25,6 @@ def display_content(content_type):
 
 menu_frame = tk.Frame(root, width=100, height=300)
 menu_frame.pack(side="left", fill="y", padx=(10, 0))
-
-welcome_label = tk.Label(root, text="Welcome")
-welcome_label.pack(pady=(20, 5))
 
 creator_label = tk.Label(root, text="This program was made by Erik Råberg & Carl Lavö")
 creator_label.pack(pady=5)
