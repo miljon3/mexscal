@@ -31,6 +31,7 @@ class VariableManager:
             "y3tax": {"value": 2161, "name": "Yearly Road Tax 3 or less Axles", "unit": "Kr"},
             "y4tax": {"value": 3609, "name": "Yearly Road Tax 4 or more Axles", "unit": "Kr"},
             "axles": {"value": 3, "name": "Number of Axles", "unit": ""},
+            "d": {"value": 0.07, "name": "Discount Rate", "unit": "%"},
 
         }
         self.load_variables()
@@ -58,6 +59,30 @@ def open_variable_editor_in_main_window(root, var_manager):
     for widget in root.winfo_children():
         widget.destroy()
 
+    # --- Create a scrollable canvas ---
+    canvas = tk.Canvas(root, borderwidth=0)
+    scrollbar = tk.Scrollbar(root, orient="vertical", command=canvas.yview)
+    scroll_frame = tk.Frame(canvas)
+
+    def _on_mousewheel(event):
+        canvas.yview_scroll(int(-1 * (event.delta*3)), "units")
+
+
+    scroll_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+
+    canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+    canvas.bind_all("<MouseWheel>", _on_mousewheel)  
+
     entries = {}
     row = 0
     col = 0
@@ -65,17 +90,15 @@ def open_variable_editor_in_main_window(root, var_manager):
     field_width = 15
 
     for var_name, info in var_manager.variables.items():
-        # Add skip for type variable
         if var_name == "type":
             continue
 
-        frame = tk.Frame(root)
+        frame = tk.Frame(scroll_frame)
         frame.grid(row=row, column=col, padx=10, pady=5, sticky="w")
 
         label_var = tk.StringVar()
-        # If unit is % use a .2% format, else use integer format, or if it's a float use .3f format
         if info['unit'] == "%":
-            label_var.set(f"{info['name']}: {info['value']:.2%} {info['unit']}")
+            label_var.set(f"{info['name']}: {info['value'] * 100:.2f} {info['unit']}")
         elif isinstance(info['value'], int):
             label_var.set(f"{info['name']}: {info['value']} {info['unit']}")
         else:
@@ -85,7 +108,6 @@ def open_variable_editor_in_main_window(root, var_manager):
 
         entry = tk.Entry(frame, width=field_width)
         entry.grid(row=1, column=0, columnspan=3, padx=5, sticky="ew")
-        # Display the percentage, float or int value in the entry field
         if info['unit'] == "%":
             entry.insert(0, f"{info['value'] * 100:.2f}")
         elif isinstance(info['value'], int):
@@ -107,9 +129,9 @@ def open_variable_editor_in_main_window(root, var_manager):
             col = 0
             row += 1
 
-    # Separate UI for 'type'
+    # Add "type" dropdown UI at the bottom
     type_info = var_manager.variables["type"]
-    type_frame = tk.Frame(root)
+    type_frame = tk.Frame(scroll_frame)
     type_frame.grid(row=row + 1, column=0, columnspan=max_columns, padx=10, pady=10, sticky="w")
 
     type_label_var = tk.StringVar()
@@ -119,15 +141,22 @@ def open_variable_editor_in_main_window(root, var_manager):
 
     selected_type = tk.StringVar()
     selected_type.set(str(type_info['value']))
-    type_dropdown = tk.OptionMenu(type_frame, selected_type, "1", "2", "3", "4", "5", "6", "7", "8")
+    type_dropdown = tk.OptionMenu(type_frame, selected_type, *map(str, range(1, 9)))
     type_dropdown.config(width=field_width - 3)
     type_dropdown.grid(row=1, column=0, padx=5, pady=2, sticky="w")
 
     def update_type():
-        if var_manager.update_variable("type", selected_type.get()):
-            type_label_var.set(f"{type_info['name']}: {var_manager.variables['type']['value']} {type_info['unit']}")
-            messagebox.showinfo("Success", "Type updated successfully!")
-        else:
+        try:
+            new_val = int(selected_type.get())
+            if new_val in range(1, 9):
+                if var_manager.update_variable("type", new_val):
+                    type_label_var.set(f"{type_info['name']}: {new_val} {type_info['unit']}")
+                    messagebox.showinfo("Success", "Type updated successfully!")
+                else:
+                    messagebox.showerror("Error", "Could not update type.")
+            else:
+                messagebox.showerror("Error", "Please select a valid type between 1 and 8.")
+        except ValueError:
             messagebox.showerror("Error", "Invalid type selected.")
 
     type_update_btn = tk.Button(type_frame, text="Update", width=8, command=update_type)

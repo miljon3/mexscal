@@ -10,14 +10,41 @@ from depreciation import residual_value
 from range import calculate_daily_range
 from discount import discount
 
-def open_tco_page(parent_frame, var_manager):
-    for widget in parent_frame.winfo_children():
+def open_tco_page(scrollable_frame, var_manager):
+    for widget in scrollable_frame.winfo_children():
         widget.destroy()
 
-    grid_frame = tk.Frame(parent_frame)
+     # Scrollable frame setup
+    canvas = tk.Canvas(scrollable_frame)
+    scrollbar = tk.Scrollbar(scrollable_frame, orient="vertical", command=canvas.yview)
+    scrollable_frame = tk.Frame(canvas)
+
+    def _on_mousewheel(event):
+    # For MacOS, delta values are small so multiply by 1 (or higher if needed)
+        canvas.yview_scroll(int(-1 * (event.delta*3)), "units")
+
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+    canvas.bind_all("<MouseWheel>", _on_mousewheel)  
+
+    title_label = tk.Label(scrollable_frame, text="Total Cost of Ownership (TCO) Analysis")
+    title_label.pack(pady=10)
+
+    grid_frame = tk.Frame(scrollable_frame)
     grid_frame.pack(pady=10, padx=10, fill="both", expand=True)
 
-    stat_frame = tk.Frame(parent_frame)
+    stat_frame = tk.Frame(scrollable_frame)
     stat_frame.pack(pady=10, padx=10, fill="both", expand=True)
 
     """ Grid frame for displaying the results """
@@ -93,6 +120,20 @@ def open_tco_page(parent_frame, var_manager):
     label_total_yearly = tk.Label(grid_frame, text="N/A")
     label_total_yearly.grid(row=11, column=3, padx=10, pady=5)
 
+    # DISPLAY TCO VALUES
+
+    label_TCO_per_km_title = tk.Label(grid_frame, text="TCO per km:", font=('Arial', 15, 'bold'))
+    label_TCO_per_km_title.grid(row=12, column=1, padx=10, pady=(10, 2))
+
+    label_TCO_total_title = tk.Label(grid_frame, text="Total TCO:", font=('Arial', 15, 'bold'))
+    label_TCO_total_title.grid(row=12, column=3, padx=10, pady=(10, 2))
+
+    label_total_TCO_per_km = tk.Label(grid_frame, text="N/A")
+    label_total_TCO_per_km.grid(row=13, column=1, padx=10, pady=5)
+
+    label_total_TCO = tk.Label(grid_frame, text="N/A")
+    label_total_TCO.grid(row=13, column=3, padx=10, pady=5)
+
     # Main categories & subcategories
     tk.Label(stat_frame, text="Truck").grid(row=1, column=0, padx=10, pady=5, sticky="w")
     tk.Label(stat_frame, text="   - Truck Cost").grid(row=2, column=0, padx=10, pady=2, sticky="w")
@@ -103,6 +144,7 @@ def open_tco_page(parent_frame, var_manager):
     tk.Label(stat_frame, text="   - Daily Driving Time").grid(row=7, column=0, padx=10, pady=2, sticky="w")
     tk.Label(stat_frame, text="   - Days driven per year").grid(row=8, column=0, padx=10, pady=2, sticky="w")
     tk.Label(stat_frame, text="   - Annual Kilometers Driven").grid(row=9, column=0, padx=10, pady=2, sticky="w")
+    tk.Label(stat_frame, text="   - Number of battery replacements").grid(row=10, column=0, padx=10, pady=2, sticky="w")
 
     # For every Label in the grid, create a label to display the value
 
@@ -130,6 +172,9 @@ def open_tco_page(parent_frame, var_manager):
     label_annual_kilometers_driven = tk.Label(stat_frame, text="N/A")
     label_annual_kilometers_driven.grid(row=9, column=1, padx=10, pady=2)
 
+    label_battery_replacements = tk.Label(stat_frame, text="N/A")
+    label_battery_replacements.grid(row=10, column=1, padx=10, pady=2)
+
 
     def calculate_and_display_cic():
         """ Variables """
@@ -137,6 +182,7 @@ def open_tco_page(parent_frame, var_manager):
         #dcr = var_manager.variables["dcr"]["value"]
         cost_driver_hourly = var_manager.variables["cost_driver_hourly"]["value"]
         bc = var_manager.variables["bc"]["value"]
+        d = var_manager.variables["d"]["value"]
         ccph_fast = var_manager.variables["ccph_fast"]["value"]
         r = var_manager.variables["r"]["value"]
         """ akm should be done by mc, uncomment otherwise"""
@@ -221,8 +267,8 @@ def open_tco_page(parent_frame, var_manager):
         print(f"Total distance driven: {akm} km")
         daily_drive = akm / yu
         daily_time = total_hours / yu
-        print(f"Daily driving time: {daily_time:.2f} hours")
-        print(f"Daily driving distance: {daily_drive:.2f} km")
+        print(f"Daily driving time: {daily_time:,.2f} hours")
+        print(f"Daily driving distance: {daily_drive:,.2f} km")
 
         # Use total stops to calculate the ratio dcr and pfcr. (Public fast charging stops / total stops + depot stops (one a day))
         # If nomadic driving, we never charge at depot, so dcr = 0 and pfcr = 1
@@ -233,7 +279,7 @@ def open_tco_page(parent_frame, var_manager):
         else:
             pfcr = total_stops / (yu + total_stops)
             dcr = 1-pfcr
-        print(f"Daily Charging Ratio: {pfcr:.2f}")
+        print(f"Daily Charging Ratio: {pfcr:,.2f}")
 
         """ Charging costs """
 
@@ -247,7 +293,7 @@ def open_tco_page(parent_frame, var_manager):
             eprice = 0
         cic_km = calculate_cic_km(pfcr, dcr, daily_battery_capacity, ccph_fast, ccph_depot, daily_range)
         cic = cic_km * akm
-        print(f"Total Charging Infrastructure Cost: {cic:.2f} SEK")
+        print(f"Total Charging Infrastructure Cost: {cic:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
         """ Operational costs """
 
@@ -275,7 +321,7 @@ def open_tco_page(parent_frame, var_manager):
         dannum = 0.2
         remaining_value = residual_value(truck_cost, dannum, dmile, lifespan, mileage)
         # dconstant = (remaining_value) / truck_cost
-        print(f"Remaining Value: {remaining_value:.2f} SEK")
+        print(f"Remaining Value: {remaining_value:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
 
         # Financing
@@ -287,74 +333,94 @@ def open_tco_page(parent_frame, var_manager):
         financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy)
 
 
-        print(f"Financing Cost: {financing_cost:.2f} SEK")
+        print(f"Financing Cost: {financing_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
         # Share of total cost from battery
         bshare = battery_cost / (battery_cost + truck_cost)
         tshare = truck_cost / (battery_cost + truck_cost)
         battery_financing = financing_cost * bshare
-        print(f"Battery Financing Cost: {battery_financing:.2f} SEK")
+        print(f"Battery Financing Cost: {battery_financing:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
         truck_financing = financing_cost * tshare
 
 
         # Residual values
-        battery_value_remaining = battery_cost * (1 - tcls / bcls)
+        battery_value_remaining = max(0,battery_cost * (1 - tcls / bcls))
+        
         total_residual_value = remaining_value + battery_value_remaining
         print(remaining_value)
-        print(f"Total Residual Value: {total_residual_value:.2f} SEK")
+        print(f"Total Residual Value: {total_residual_value:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
         """ Total costs are done below"""
 
+        # BATTERY REPLACEMENT
+        battery_replacements = tcls // bcls
+
+        print(f"Battery replacements: {battery_replacements}")
+
+        battery_replacement_cost = battery_cost_per_kWh * bc
+        discounted_battery_cost = 0
+        total_battery_replacement_cost = battery_replacement_cost * (battery_replacements)
+        
+        if battery_replacements > 0:
+            for i in range(1, int(battery_replacements) + 1):
+                replacement_year = i * lifespan / (battery_replacements + 1)
+                discounted_battery_cost += battery_replacement_cost / ((1 + d) ** replacement_year)
+
+
         # Totals
-        total_cost_yearly = cic + maintenance_cost + financing_cost + driver_cost_yearly
+        total_cost_yearly = cic + maintenance_cost + financing_cost + driver_cost_yearly + (total_battery_replacement_cost / lifespan)
         ### TCO ###
-        TCO = discount(total_cost_yearly, 0.07, lifespan) - total_residual_value / ((1 + 0.07) ** lifespan)
+        TCO = discount(total_cost_yearly, d, lifespan) + discounted_battery_cost - total_residual_value / ((1 + d) ** lifespan)
         ### TCO ###
-        print(f"Total Cost of Ownership: {TCO:.2f} SEK")
+        print(f"Total Cost of Ownership: {TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
         TCO_KM = TCO / (akm * lifespan)
-        print(f"Total Cost of Ownership per km: {TCO_KM:.2f} SEK/km")
+        print(f"Total Cost of Ownership per km: {TCO_KM:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
         total_cost_monthly = total_cost_yearly / 12
         total_cost_per_km = total_cost_yearly / akm
-        print(f"Total Cost of Ownership per km (not discounted): {total_cost_per_km:.2f} SEK/km")
+        print(f"Total Cost of Ownership per km (not discounted): {total_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
         # Fixed charging cost per km
         charger_cost_per_km = cic_km
-        label_charger_cost_km.config(text=f"{charger_cost_per_km:.2f} SEK/km")
-        label_energy_price_km.config(text=f"{(bc * eprice) / r:.2f} SEK/km")
+        label_charger_cost_km.config(text=f"{charger_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        label_energy_price_km.config(text=f"{(bc * eprice) / r:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
-        label_maintenance_km.config(text=f"{maintenance_cost / akm:.2f} SEK/km")
-        label_maintenance_monthly.config(text=f"{maintenance_cost / 12:.2f} SEK")
-        label_maintenance_yearly.config(text=f"{maintenance_cost:.2f} SEK")
+        label_maintenance_km.config(text=f"{maintenance_cost / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        label_maintenance_monthly.config(text=f"{maintenance_cost / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+        label_maintenance_yearly.config(text=f"{maintenance_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
-        label_driver_km.config(text=f"{driver_cost_km:.2f} SEK/km")
-        label_driver_monthly.config(text=f"{driver_cost_yearly / 12:.2f} SEK")
-        label_driver_yearly.config(text=f"{driver_cost_yearly:.2f} SEK")
+        label_driver_km.config(text=f"{driver_cost_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        label_driver_monthly.config(text=f"{driver_cost_yearly / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+        label_driver_yearly.config(text=f"{driver_cost_yearly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
-        label_road_tax_km.config(text=f"{road_tax / akm:.2f} SEK/km")
-        label_road_tax_monthly.config(text=f"{road_tax / 12:.2f} SEK")
-        label_road_tax_yearly.config(text=f"{road_tax:.2f} SEK")
+        label_road_tax_km.config(text=f"{road_tax / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        label_road_tax_monthly.config(text=f"{road_tax / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+        label_road_tax_yearly.config(text=f"{road_tax:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
-        label_financial_truck_km.config(text=f"{truck_financing / akm:.2f} SEK/km")
-        label_financial_battery_km.config(text=f"{battery_financing / akm:.2f} SEK/km")
+        label_financial_truck_km.config(text=f"{truck_financing / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        label_financial_battery_km.config(text=f"{battery_financing / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
-        label_total_per_km.config(text=f"{total_cost_per_km:.2f} SEK/km")
-        label_total_monthly.config(text=f"{total_cost_monthly:.2f} SEK")
-        label_total_yearly.config(text=f"{total_cost_yearly:.2f} SEK")
+        label_total_per_km.config(text=f"{total_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        label_total_monthly.config(text=f"{total_cost_monthly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+        label_total_yearly.config(text=f"{total_cost_yearly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+
+        label_total_TCO.config(text=f"{TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        label_total_TCO_per_km.config(text=f"{TCO_KM:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
 
         """ Display the key assumptions """
-        label_battery_cost.config(text=f"{battery_cost:.2f} SEK")
-        label_battery_capacity.config(text=f"{bc:.2f} kWh")
-        label_daily_range.config(text=f"{daily_range:.2f} km")
-        label_truck_cost.config(text=f"{truck_cost:.2f} SEK")
-        label_daily_driving_distance.config(text=f"{daily_drive:.2f} km")
-        label_daily_driving_time.config(text=f"{daily_time:.2f} hours")
-        label_days_driven_per_year.config(text=f"{yu:.2f} days")
-        label_annual_kilometers_driven.config(text=f"{akm:.2f} km")
+        label_battery_cost.config(text=f"{battery_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+        label_battery_capacity.config(text=f"{bc:,.2f} kWh")
+        label_daily_range.config(text=f"{daily_range:,.2f} km")
+        label_truck_cost.config(text=f"{truck_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+        label_daily_driving_distance.config(text=f"{daily_drive:,.2f} km")
+        label_daily_driving_time.config(text=f"{daily_time:,.2f} hours")
+        label_days_driven_per_year.config(text=f"{yu:,.2f} days")
+        label_annual_kilometers_driven.config(text=f"{akm:,.2f}".replace(",", " ").replace(".", ",") + " KM")
+        label_battery_replacements.config(text=f"{battery_replacements:,.2f}")
         
         # Export Type, Daily Driving Distance, Annual Kilometers Driven, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost, driver_cost_km, road_tax_km, truck_financing, battery_financing, total_cost_per_km, total_cost_monthly, total_cost_yearly
         df = pd.DataFrame({
-            "Category": ["Type", "Daily Driving Distance", "Annual Kilometers Driven", "Public Fast Charging Ratio", "Daily Range", "Daily Battery Capacity", "Daily Time", "Charger Cost per km", "Maintenance Cost per km", "Driver Cost per km", "Road Tax per km", "Truck Financing Cost per km", "Battery Financing Cost per km", "Total Cost per km", "Total Cost per month", "Total Cost per year"],
-            "Value": [typedict[type]["name"], daily_drive, akm, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost / akm, driver_cost_km, road_tax / akm, truck_financing / akm, battery_financing / akm, total_cost_per_km, total_cost_monthly, total_cost_yearly]
+            "Category": ["Type", "Daily Driving Distance", "Annual Kilometers Driven", "Public Fast Charging Ratio", "Daily Range", "Daily Battery Capacity", "Daily Time", "Charger Cost per km", "Maintenance Cost per km", "Driver Cost per km", "Road Tax per km", "Truck Financing Cost per km", "Battery Financing Cost per km", "Total Cost per km", "Total Cost per month", "Total Cost per year", "TCO", "TCO per km", "Battery Replacements", "Battery Replacement Cost"],
+            "Value": [typedict[type]["name"], daily_drive, akm, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost / akm, driver_cost_km, road_tax / akm, truck_financing / akm, battery_financing / akm, total_cost_per_km, total_cost_monthly, total_cost_yearly, TCO, TCO_KM, battery_replacements, battery_replacement_cost]
         })
 
         # Save the results to a CSV file
@@ -362,5 +428,5 @@ def open_tco_page(parent_frame, var_manager):
         save_results_to_csv(df, type)
 
 
-    calculate_button = tk.Button(parent_frame, text="Calculate Costs", command=calculate_and_display_cic)
+    calculate_button = tk.Button(scrollable_frame, text="Calculate Costs", command=calculate_and_display_cic)
     calculate_button.pack(pady=10, anchor="n") 

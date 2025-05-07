@@ -10,12 +10,12 @@
         "unit":"years"
     },
     "interest_rate":{
-        "value":0.05,
+        "value":0.06,
         "name":"Interest Rate",
         "unit":"%"
     },
     "bc":{
-        "value":524.0,
+        "value":500,
         "name":"Battery capacity \/ fuel capacity",
         "unit":"kWh \/ litres"
     },
@@ -25,22 +25,22 @@
         "unit":"Kr\/kWh"
     },
     "r":{
-        "value":465.0,
+        "value":465,
         "name":"Range of the vehicle per full charge",
         "unit":"km"
     },
     "truck_cost":{
-        "value":1409000.0,
+        "value":1400000.0,
         "name":"Truck cost",
         "unit":"Kr"
     },
     "battery_cost_per_kWh":{
-        "value":5152.0,
+        "value":2500.0,
         "name":"Battery cost per kWh",
         "unit":"Kr\/kWh"
     },
     "mcpkm":{
-        "value":1.4,
+        "value":0.98,
         "name":"Maintenance cost per km",
         "unit":"Kr\/km"
     },
@@ -50,12 +50,12 @@
         "unit":"%"
     },
     "subsidy":{
-        "value":0.2,
+        "value":0.25,
         "name":"Subsidy",
         "unit":"%"
     },
     "chinco":{
-        "value":100000.0,
+        "value":100000,
         "name":"Charger installation cost",
         "unit":"Kr"
     },
@@ -70,12 +70,12 @@
         "unit":"Kr\/kWh"
     },
     "yu":{
-        "value":220.0,
+        "value":250,
         "name":"Active days in a year",
         "unit":""
     },
     "bcls":{
-        "value":5000.0,
+        "value":5000,
         "name":"Battery Cycle Lifespan",
         "unit":"Cycles"
     },
@@ -90,12 +90,12 @@
         "unit":"1\/2\/3\/4"
     },
     "dmile":{
-        "value":0.002,
+        "value":0.0000000625,
         "name":"Depreciation Mileage",
         "unit":""
     },
     "dannum":{
-        "value":0.1,
+        "value":0.2,
         "name":"Depreciation Year",
         "unit":""
     },
