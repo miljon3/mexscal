@@ -85,7 +85,7 @@
         "unit":"%"
     },
     "type":{
-        "value":1.0,
+        "value":8.0,
         "name":"Type of usage",
         "unit":"1\/2\/3\/4"
     },
@@ -101,12 +101,22 @@
     },
     "y3tax":{
         "value":2161,
-        "name":"Yearly Road Tax 3 or less Axles",
+        "name":"Yearly Road Tax 3 or less Axles (Electric)",
         "unit":"Kr"
     },
     "y4tax":{
         "value":3609,
-        "name":"Yearly Road Tax 4 or more Axles",
+        "name":"Yearly Road Tax 4 or more Axles (Electric)",
+        "unit":"Kr"
+    },
+    "dy3tax":{
+        "value":8644,
+        "name":"Yearly Road Tax 3 or less Axles (Electric)",
+        "unit":"Kr"
+    },
+    "dy4tax":{
+        "value":14404,
+        "name":"Yearly Road Tax 4 or more Axles (Electric)",
         "unit":"Kr"
     },
     "axles":{

@@ -91,7 +91,7 @@ def open_variable_editor_in_main_window(root, var_manager):
     entries = {}
     row = 0
     col = 0
-    max_columns = 3
+    max_columns = 4
     field_width = 15
 
     for var_name, info in var_manager.variables.items():
