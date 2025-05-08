@@ -453,5 +453,15 @@ def open_tco_page(scrollable_frame, var_manager):
         save_results_to_csv(df, type)
 
 
+
     calculate_button = tk.Button(scrollable_frame, text="Calculate Costs", command=calculate_and_display_cic)
-    calculate_button.pack(pady=10, anchor="n") 
+    calculate_button.pack(pady=10, anchor="n")
+
+    def calculate_50_times():
+        for _ in range(50):
+            calculate_and_display_cic()
+
+    calculate_button_50 = tk.Button(scrollable_frame, text="Calculate Costs 50 simulations", command=calculate_50_times)
+    calculate_button_50.pack(pady=10, anchor="n") 
+
+    
