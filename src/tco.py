@@ -10,6 +10,49 @@ from depreciation import residual_value
 from range import calculate_daily_range
 from discount import discount
 
+typedict = {
+            1: {
+                "name": "Distribution",
+                "weight": "54",
+                "fuel": "Electric"
+            },
+            2: {
+                "name": "Regional Distribution",
+                "weight": "54",
+                "fuel": "Electric"
+            },
+            3: {
+                "name": "Long Range Traffic",
+                "weight": "76",
+                "fuel": "Electric"
+            },
+            4: {
+                "name": "Nomadic",
+                "weight": "76",
+                "fuel": "Electric"
+            },
+            5: {
+                "name": "Distribution (diesel)",
+                "weight": "54",
+                "fuel": "Diesel"
+            },
+            6: {
+                "name": "Regional Distribution (diesel)",
+                "weight": "54",
+                "fuel": "Diesel"
+            },
+            7: {
+                "name": "Long Range Traffic (diesel)",
+                "weight": "76",
+                "fuel": "Diesel"
+            },
+            8: {
+                "name": "Nomadic (diesel)",
+                "weight": "76",
+                "fuel": "Diesel"
+            }
+        }
+
 def open_tco_page(scrollable_frame, var_manager):
     for widget in scrollable_frame.winfo_children():
         widget.destroy()
@@ -204,48 +247,7 @@ def open_tco_page(scrollable_frame, var_manager):
         type = var_manager.variables["type"]["value"]
         type = int(type)
         # Dictionary containing variables for the different types
-        typedict = {
-            1: {
-                "name": "Distribution",
-                "weight": "54",
-                "fuel": "Electric"
-            },
-            2: {
-                "name": "Regional Distribution",
-                "weight": "54",
-                "fuel": "Electric"
-            },
-            3: {
-                "name": "Long Range Traffic",
-                "weight": "76",
-                "fuel": "Electric"
-            },
-            4: {
-                "name": "Nomadic",
-                "weight": "76",
-                "fuel": "Electric"
-            },
-            5: {
-                "name": "Distribution (diesel)",
-                "weight": "54",
-                "fuel": "Diesel"
-            },
-            6: {
-                "name": "Regional Distribution (diesel)",
-                "weight": "54",
-                "fuel": "Diesel"
-            },
-            7: {
-                "name": "Long Range Traffic (diesel)",
-                "weight": "76",
-                "fuel": "Diesel"
-            },
-            8: {
-                "name": "Nomadic (diesel)",
-                "weight": "76",
-                "fuel": "Diesel"
-            }
-        }
+        
 
         dannum = var_manager.variables["dannum"]["value"]
         dmile = var_manager.variables["dmile"]["value"]

@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 import pandas as pd
 import os
+from tco import typedict
+
 
 class VariableManager:
     FILE_PATH = "variables.json"
@@ -149,6 +151,18 @@ def open_variable_editor_in_main_window(root, var_manager):
     type_dropdown = tk.OptionMenu(type_frame, selected_type, *map(str, range(1, 9)))
     type_dropdown.config(width=field_width - 3)
     type_dropdown.grid(row=1, column=0, padx=5, pady=2, sticky="w")
+
+    info_frame = tk.Frame(scroll_frame)
+    info_frame.grid(row=row + 2, column=0, columnspan=max_columns, padx=10, pady=10, sticky="w")
+
+    info_label = tk.Label(info_frame, text="Type Descriptions", font=("Arial", 15, "bold"), anchor="w")
+    info_label.pack(anchor="w")
+
+    for type_id, details in typedict.items():
+        desc = f"Type {type_id}:\n"
+        for key, value in details.items():
+            desc += f"  {key.capitalize()}: {value}\n"
+        tk.Label(info_frame, text=desc.strip(), anchor="w", justify="left", font=("Arial", 13)).pack(anchor="w", pady=(0, 4))
 
     def update_type():
         try:
