@@ -7,7 +7,6 @@ root = tk.Tk()
 root.title("Main Application")
 root.geometry("1600x1200")
 
-
 var_manager = VariableManager()
 
 def display_content(content_type):

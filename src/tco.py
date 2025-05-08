@@ -316,7 +316,7 @@ def open_tco_page(scrollable_frame, var_manager):
 
         cic_km = calculate_cic_km(pfcr, dcr, daily_battery_capacity, ccph_fast, ccph_depot, daily_range)
         cic = cic_km * akm
-        print(f"Total Charging Infrastructure Cost: {cic:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        print(f"Total Charging Infrastructure Cost: {cic:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
         """ Operational costs """
 
@@ -344,7 +344,7 @@ def open_tco_page(scrollable_frame, var_manager):
         dannum = 0.2
         remaining_value = residual_value(truck_cost, dannum, dmile, lifespan, mileage)
         # dconstant = (remaining_value) / truck_cost
-        print(f"Remaining Value: {remaining_value:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        print(f"Remaining Value: {remaining_value:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
 
         # Financing
@@ -356,13 +356,13 @@ def open_tco_page(scrollable_frame, var_manager):
         financing_cost = calculate_financing_cost(truck_cost, battery_cost, interest_rate, lifespan, subsidy)
 
 
-        print(f"Financing Cost: {financing_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        print(f"Financing Cost: {financing_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
         # Share of total cost from battery
         bshare = battery_cost / (battery_cost + truck_cost)
         tshare = truck_cost / (battery_cost + truck_cost)
         battery_financing = financing_cost * bshare
-        print(f"Battery Financing Cost: {battery_financing:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        print(f"Battery Financing Cost: {battery_financing:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
         truck_financing = financing_cost * tshare
 
 
@@ -371,7 +371,7 @@ def open_tco_page(scrollable_frame, var_manager):
         
         total_residual_value = remaining_value + battery_value_remaining
         print(remaining_value)
-        print(f"Total Residual Value: {total_residual_value:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        print(f"Total Residual Value: {total_residual_value:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
         """ Total costs are done below"""
 
         # BATTERY REPLACEMENT
@@ -394,7 +394,7 @@ def open_tco_page(scrollable_frame, var_manager):
         ### TCO ###
         TCO = discount(total_cost_yearly, d, lifespan) + discounted_battery_cost - total_residual_value / ((1 + d) ** lifespan)
         ### TCO ###
-        print(f"Total Cost of Ownership: {TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        print(f"Total Cost of Ownership: {TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
         TCO_KM = TCO / (akm * lifespan)
         print(f"Total Cost of Ownership per km: {TCO_KM:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
         total_cost_monthly = total_cost_yearly / 12
