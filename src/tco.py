@@ -251,11 +251,25 @@ def open_tco_page(scrollable_frame, var_manager):
         dmile = var_manager.variables["dmile"]["value"]
         y3tax = var_manager.variables["y3tax"]["value"]
         y4tax = var_manager.variables["y4tax"]["value"]
+        dy3tax = var_manager.variables["dy3tax"]["value"]
+        dy4tax = var_manager.variables["dy4tax"]["value"]
         axles = var_manager.variables["axles"]["value"]
+        dieselprice = var_manager.variables["dieselprice"]["value"]
+        dieseltank = var_manager.variables["dieseltank"]["value"]
+        dieselrange = var_manager.variables["dieselrange"]["value"]
         # Run the Monte Carlo simulation
 
+        # If type is 5,6,7,8 change r to dieselrange and set bcd to 0.95
+        if type in [5, 6, 7, 8]:
+            print("Disesel Detected")
+            r = dieselrange
+            bcd = 1
+            bc = dieseltank
+            battery_cost = 0
+            battery_cost_per_kWh = 0
+
+
         daily_range = calculate_daily_range(type, bc, typedict)
-        daily_range = r * bcd
         daily_battery_capacity = bc * bcd
         simulated_data = monte_carlo_sampling(yu, type, daily_range)
         """ Animation """
@@ -291,6 +305,15 @@ def open_tco_page(scrollable_frame, var_manager):
         if type == 4:
             ccph_depot = 0
             eprice = 0
+        # Or if type is 5,6,7,8. Change to the diesel variables
+        elif type in [5, 6, 7, 8]:
+            ccph_depot = 0
+            ccph_fast = dieselprice
+            pfcr = 1
+            dcr = 0
+            y3tax = dy3tax
+            y4tax = dy4tax
+
         cic_km = calculate_cic_km(pfcr, dcr, daily_battery_capacity, ccph_fast, ccph_depot, daily_range)
         cic = cic_km * akm
         print(f"Total Charging Infrastructure Cost: {cic:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")

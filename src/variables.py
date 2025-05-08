@@ -28,10 +28,15 @@ class VariableManager:
             "type": {"value": 4, "name": "Type of usage", "unit": "1/2/3/4"},
             "dmile": {"value": 6.25e-8, "name": "Depreciation Mileage", "unit": ""},
             "dannum": {"value": 0.2, "name": "Depreciation Year", "unit": ""},
-            "y3tax": {"value": 2161, "name": "Yearly Road Tax 3 or less Axles", "unit": "Kr"},
-            "y4tax": {"value": 3609, "name": "Yearly Road Tax 4 or more Axles", "unit": "Kr"},
+            "y3tax": {"value": 2161, "name": "Yearly Road Tax 3 or less Axles (Electric)", "unit": "Kr"},
+            "y4tax": {"value": 3609, "name": "Yearly Road Tax 4 or more Axles (Electric)", "unit": "Kr"},
+            "dy3tax": {"value": 8644, "name": "Yearly Road Tax 3 or less Axles (Electric)", "unit": "Kr"},
+            "dy4tax": {"value": 14404, "name": "Yearly Road Tax 4 or more Axles (Electric)", "unit": "Kr"},
             "axles": {"value": 3, "name": "Number of Axles", "unit": ""},
             "d": {"value": 0.07, "name": "Discount Rate", "unit": "%"},
+            "dieselprice": {"value": 15.0, "name": "Diesel Price", "unit": "Kr"},
+            "dieseltank": {"value": 800, "name": "Diesel Tank Size", "unit": "Liter"},
+            "dieselrange": {"value": 2000, "name": "Diesel Range", "unit": "Km"},
 
         }
         self.load_variables()
