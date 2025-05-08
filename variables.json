@@ -35,7 +35,7 @@
         "unit":"Kr"
     },
     "battery_cost_per_kWh":{
-        "value":5152.0,
+        "value":1500.0,
         "name":"Battery cost per kWh",
         "unit":"Kr\/kWh"
     },
@@ -50,7 +50,7 @@
         "unit":"%"
     },
     "subsidy":{
-        "value":0.2,
+        "value":0.0,
         "name":"Subsidy",
         "unit":"%"
     },
@@ -85,7 +85,7 @@
         "unit":"%"
     },
     "type":{
-        "value":8.0,
+        "value":4.0,
         "name":"Type of usage",
         "unit":"1\/2\/3\/4"
     },
