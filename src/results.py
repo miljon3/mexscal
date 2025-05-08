@@ -4,21 +4,25 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from math import pi
 
-def read_tco_files_with_types(folder_path):
-    data = []
-
-    for file in os.listdir(folder_path):
-        if file.endswith(".csv"):
-            df = pd.read_csv(os.path.join(folder_path, file))
-            df.columns = df.columns.str.strip()  # Normalize column names
-            df = df.set_index("Category").T
-            df["Type"] = os.path.splitext(file)[0]
-            data.append(df)
-
-    return pd.concat(data, ignore_index=True)
+def merge_csvs_per_type(base_folder):
+    merged_data = []
+    for subdir in os.listdir(base_folder):
+        subdir_path = os.path.join(base_folder, subdir)
+        if os.path.isdir(subdir_path) and subdir.startswith("Type"):
+            dfs = []
+            for file in os.listdir(subdir_path):
+                if file.endswith(".csv"):
+                    df = pd.read_csv(os.path.join(subdir_path, file))
+                    df.columns = df.columns.str.strip()
+                    df = df.set_index("Category").T
+                    dfs.append(df)
+            if dfs:
+                merged_df = pd.concat(dfs, ignore_index=True)
+                merged_df["Type"] = subdir
+                merged_data.append(merged_df)
+    return pd.concat(merged_data, ignore_index=True)
 
 def preprocess(df):
-    # Convert all columns except "Type" to numeric
     for col in df.columns:
         if col != "Type":
             df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -39,7 +43,7 @@ def radar_chart(df, metrics):
 
     for i in range(len(df)):
         values = df.loc[i, categories].values.flatten().tolist()
-        values += values[:1]  # repeat the first value to close the circle
+        values += values[:1]
         angles = [n / float(N) * 2 * pi for n in range(N)]
         angles += angles[:1]
 
@@ -71,14 +75,13 @@ def plot_tradeoff(df, x_metric, y_metric):
     plt.show()
 
 # Load and analyze
-folder_path = "src/results"
-df_raw = read_tco_files_with_types(folder_path)
+base_folder = "/Users/carllavo/Desktop/MEX/mexscal/src/results"  # Update if needed
+df_raw = merge_csvs_per_type(base_folder)
 df = preprocess(df_raw)
 
 # Select key metrics for analysis
 key_metrics = [
-    "Total Cost of Ownership", "Daily Driving Distance", 
-    "Annual Kilometers Driven", "Public Fast Charging Ratio"
+    "Total Cost of Ownership", "Annual Kilometers Driven"
 ]
 key_metrics = [m for m in key_metrics if m in df.columns]
 
@@ -86,4 +89,4 @@ key_metrics = [m for m in key_metrics if m in df.columns]
 compare_key_metrics(df, key_metrics)
 radar_chart(df, key_metrics)
 rank_types(df, key_metrics)
-plot_tradeoff(df, "Total Cost of Ownership", "Public Fast Charging Ratio")
+plot_tradeoff(df, "Total Cost of Ownership", "Annual Kilometers Driven")

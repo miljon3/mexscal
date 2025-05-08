@@ -25,13 +25,13 @@ def monte_carlo_sampling(num_days, type, max_range):
     # TODO: Check these numbers and add input for them
     params = {
         1: (160, 40),    # Distribution
-        2: (160, 40),    # Distribution
-        3: (320, 80),    # Regional Distribution
-        4: (320, 80),    # Regional Distribution
-        5: (500, 125),   # Long-range traffic
-        6: (500, 125),   # Long-range traffic
-        7: (720, 180),   # Nomadic
-        8: (720, 180),   # Nomadic
+        2: (320, 80),    # Regional Distribution
+        3: (500, 120),   # Long-range traffic
+        4: (720, 180),   # Nomadic
+        5: (160, 40),    # Distribution(diesel)
+        6: (320, 80),    # Regional Distribution(diesel)
+        7: (500, 120),   # Long-range traffic(diesel)
+        8: (720, 180),   # Nomadic (diesel)
     }
 
     if type not in params:
@@ -49,22 +49,22 @@ def monte_carlo_sampling(num_days, type, max_range):
     # TODO: Check hour calculation logic
     """ Maximum possible hours is 9 per day, except in type 3 and 4 where it is 10 (Technically its 10 hours maximum two times per week, but we use 10 hours for simplicity) """
     """ However the average speed will vary depending on type of driving"""
-    """ For example, for type 1, the average speed is 25 km/h, so 9 hours = 225 km"""
-    """ For type 2, the average speed is 40 km/h, so 9 hours = 360 km"""
-    """ For type 3, the average speed is 60 km/h, so 10 hours = 600 km"""
-    """ For type 4, the average speed is 70 km/h, so 10 hours = 700 km"""
+    """ For example, for type 1/5, the average speed is 25 km/h, so 9 hours = 225 km"""
+    """ For type 2/6, the average speed is 40 km/h, so 9 hours = 360 km"""
+    """ For type 3/7, the average speed is 60 km/h, so 10 hours = 600 km"""
+    """ For type 4/8, the average speed is 70 km/h, so 10 hours = 700 km"""
     """ As long as the distance is equal or more than the average speed, we assume that the truck was driven for 9 or 10 hours"""
     """ If it is less, we check if the truck was driven for 8 hours, then 7 hours, etc."""
     # Define max hours and speed per type
     type_info = {
         1: (9, 25),
-        2: (9, 25),
-        3: (9, 40),
-        4: (9, 40),
-        5: (10, 60),
-        6: (10, 60),
-        7: (10, 70),
-        8: (10, 70)
+        2: (9, 40),
+        3: (9, 60),
+        4: (9, 70),
+        5: (9, 25),
+        6: (9, 40),
+        7: (9, 60),
+        8: (9, 70)
     }
 
     max_hours, avg_speed = type_info[type]
