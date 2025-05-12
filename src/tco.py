@@ -335,7 +335,7 @@ def open_tco_page(scrollable_frame, var_manager):
         """ Operational costs """
 
         # Maintenance
-        maintenance_cost = calculate_maintenance_cost(mckpm, tire_factor, akm)
+        maintenance_cost = calculate_maintenance_cost(mckpm, tire_factor, akm, type)
 
         # Driver
         driver_cost_yearly = calculate_driver_cost(total_hours, cost_driver_hourly)

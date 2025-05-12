@@ -13,7 +13,6 @@ class VariableManager:
             "cost_driver_hourly": {"value": 339.9, "name": "Driver Hourly Cost", "unit": "Kr/h"},
             "lifespan": {"value": 6, "name": "Lifespan", "unit": "years"},
             "interest_rate": {"value": 0.06, "name": "Interest Rate", "unit": "%"},
-            "bc": {"value": 500, "name": "Battery capacity / fuel capacity", "unit": "kWh / litres"},
             "ccph_fast": {"value": 4.0, "name": "Public fast charger cost", "unit": "Kr/kWh"},
             "battery_cost_per_kWh": {"value": 2500.0, "name": "Battery cost per kWh", "unit": "Kr/kWh"},
             "mcpkm": {"value": 0.98, "name": "Maintenance cost per km", "unit": "Kr/km"},

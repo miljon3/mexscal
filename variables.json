@@ -14,11 +14,6 @@
         "name":"Interest Rate",
         "unit":"%"
     },
-    "bc":{
-        "value":524.0,
-        "name":"Battery capacity \/ fuel capacity",
-        "unit":"kWh \/ litres"
-    },
     "ccph_fast":{
         "value":4.0,
         "name":"Public fast charger cost",
@@ -75,7 +70,7 @@
         "unit":"%"
     },
     "type":{
-        "value":1.0,
+        "value":8.0,
         "name":"Type of usage",
         "unit":"1\/2\/3\/4"
     },
