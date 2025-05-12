@@ -1,21 +1,21 @@
 Category,Value
 Type,Nomadic
-Daily Driving Distance,676.9771299140515
-Annual Kilometers Driven,148934.96858109132
+Daily Driving Distance,506.9915359595943
+Annual Kilometers Driven,111538.13791111074
 Public Fast Charging Ratio,1
-Daily Range,324.88879577246587
-Daily Battery Capacity,419.20000000000005
-Daily Time,8.322727272727272
-Charger Cost per km,5.161150590044779
-Maintenance Cost per km,1.4
-Driver Cost per km,4.1787157571470015
-Road Tax per km,0.014509688494165762
-Truck Financing Cost per km,1.6045669923224775
-Battery Financing Cost per km,0.8950955684637809
-Total Cost per km,13.239528907978038
-Total Cost per month,164319.0684948466
-Total Cost per year,1971828.8219381594
-TCO,10248688.779761737
-TCO per km,9.830454265088559
+Daily Range,345.42567697195886
+Daily Battery Capacity,440.0
+Daily Time,7.290909090909091
+Charger Cost per km,5.0951626278288344
+Maintenance Cost per km,1.3999999999999997
+Driver Cost per km,4.888010596290317
+Road Tax per km,0.019374538973585775
+Truck Financing Cost per km,0.4161835521067508
+Battery Financing Cost per km,1.6726798854922282
+Total Cost per km,13.47203666171813
+Total Cost per month,125220.49025985472
+Total Cost per year,1502645.8831182567
+TCO,7726738.9870644715
+TCO per km,9.89634465813481
 Battery Replacements,0.0
-Battery Replacement Cost,786000.0
+Battery Replacement Cost,1100000.0

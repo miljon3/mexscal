@@ -64,15 +64,15 @@ def calculate_daily_range(type, bc, type_dict):
 
 def calc_battery_size():
     ### BATTERY SIZING CALCULATIONS
-    for i in range(50,2000):
+    for i in range(100,2000):
         r = calculate_daily_range(4, i, type_dict=typedict)
-        if r*0.8 > 554.24:
+        if r*0.8 > 507.46:
             print(i)
             break
 
-calc_battery_size()
+#calc_battery_size()
 
-# type 1, average distance is 66.8 km, result = 89 kWh
-# type 2, average distance is 137.36 km, result = 183 kWh
-# type 3, average distance is 283.61 km, result = 492 kWh
-# type 4, average distance is 554.24 km, result = 1104 kWh
+# type 1, average distance is 51.7 km, result = 69 kWh
+# type 2, average distance is 110.35 km, result = 147 kWh
+# type 3, average distance is 238.24 km, result = 413 kWh
+# type 4, average distance is 507.46 km, result = 1010 kWh

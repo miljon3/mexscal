@@ -5,6 +5,7 @@ from charging import calculate_cic_km, calculate_charger_costs, calculate_ccph_d
 from maintenance import calculate_maintenance_cost
 from financial import calculate_financing_cost
 from montecarlo import monte_carlo_sampling, return_totals, animate
+from purchase_price import calculate_purchase_price
 from routes import calculate_driver_cost, calculate_driver_cost_km
 from depreciation import residual_value
 from range import calculate_daily_range
@@ -14,42 +15,58 @@ typedict = {
             1: {
                 "name": "Distribution",
                 "weight": "18",
-                "fuel": "Electric"
+                "fuel": "Electric",
+                "power": "200",
+                "capacity": "180"
             },
             2: {
                 "name": "Regional Distribution",
                 "weight": "18",
-                "fuel": "Electric"
+                "fuel": "Electric",
+                "power": "200",
+                "capacity": "250",
             },
             3: {
                 "name": "Long Range Traffic",
                 "weight": "42",
-                "fuel": "Electric"
+                "fuel": "Electric",
+                "power": "350",
+                "capacity": "550",
             },
             4: {
                 "name": "Nomadic",
                 "weight": "72",
-                "fuel": "Electric"
+                "fuel": "Electric",
+                "power": "550",
+                "capacity": "550",
             },
             5: {
                 "name": "Distribution (diesel)",
                 "weight": "18",
-                "fuel": "Diesel"
+                "fuel": "Diesel",
+                "power": "200",
+                "capacity": "180",
             },
             6: {
                 "name": "Regional Distribution (diesel)",
                 "weight": "18",
-                "fuel": "Diesel"
+                "fuel": "Diesel",
+                "power": "200",
+                "capacity": "250",
             },
             7: {
                 "name": "Long Range Traffic (diesel)",
                 "weight": "42",
-                "fuel": "Diesel"
+                "fuel": "Diesel",
+                "power": "350",
+                "capacity": "550",
             },
             8: {
                 "name": "Nomadic (diesel)",
                 "weight": "72",
-                "fuel": "Diesel"
+                "fuel": "Diesel",
+                "power": "550",
+                "capacity": "550",
             }
         }
 
@@ -221,18 +238,19 @@ def open_tco_page(scrollable_frame, var_manager):
 
     def calculate_and_display_cic():
         """ Variables """
+        type = var_manager.variables["type"]["value"]
+        type = int(type)
         #pfcr = var_manager.variables["pfcr"]["value"]
         #dcr = var_manager.variables["dcr"]["value"]
         cost_driver_hourly = var_manager.variables["cost_driver_hourly"]["value"]
-        bc = var_manager.variables["bc"]["value"]
+        # bc = var_manager.variables["bc"]["value"]
         d = var_manager.variables["d"]["value"]
         ccph_fast = var_manager.variables["ccph_fast"]["value"]
-        r = var_manager.variables["r"]["value"]
+        # r = var_manager.variables["r"]["value"]
         """ akm should be done by mc, uncomment otherwise"""
         #akm = var_manager.variables["akm"]["value"]
         mckpm = var_manager.variables["mcpkm"]["value"]
         tire_factor = var_manager.variables["tire_factor"]["value"]
-        truck_cost = var_manager.variables["truck_cost"]["value"]
         battery_cost_per_kWh = var_manager.variables["battery_cost_per_kWh"]["value"]
         lifespan = var_manager.variables["lifespan"]["value"]
         interest_rate = var_manager.variables["interest_rate"]["value"]
@@ -241,11 +259,11 @@ def open_tco_page(scrollable_frame, var_manager):
         chutra = var_manager.variables["chutra"]["value"]
         eprice = var_manager.variables["eprice"]["value"]
         yu = int(var_manager.variables["yu"]["value"])
+        bc = int(typedict[type]["capacity"])
         battery_cost = bc * battery_cost_per_kWh
         bcls = var_manager.variables["bcls"]["value"]
         bcd = var_manager.variables["bcd"]["value"]
-        type = var_manager.variables["type"]["value"]
-        type = int(type)
+       
         # Dictionary containing variables for the different types
         
         y3tax = var_manager.variables["y3tax"]["value"]
@@ -257,7 +275,6 @@ def open_tco_page(scrollable_frame, var_manager):
         dieseltank = var_manager.variables["dieseltank"]["value"]
         dieselrange = var_manager.variables["dieselrange"]["value"]
         # Run the Monte Carlo simulation
-
         # If type is 5,6,7,8 change r to dieselrange and set bcd to 0.95
         if type in [5, 6, 7, 8]:
             print("Disesel Detected")
@@ -266,8 +283,6 @@ def open_tco_page(scrollable_frame, var_manager):
             bc = dieseltank
             battery_cost = 0
             battery_cost_per_kWh = 0
-
-
         daily_range = calculate_daily_range(type, bc, typedict)
         daily_battery_capacity = bc * bcd
         simulated_data = monte_carlo_sampling(yu, type, daily_range)
@@ -341,6 +356,7 @@ def open_tco_page(scrollable_frame, var_manager):
         # https://publications.anl.gov/anlpubs/2021/05/167399.pdf suggests a value of 6.25e-8 per km
         dmile = 6.25e-8
         dannum = 0.2
+        truck_cost = calculate_purchase_price(type, typedict)
         remaining_value = residual_value(truck_cost, dannum, dmile, lifespan, mileage)
         # dconstant = (remaining_value) / truck_cost
         print(f"Remaining Value: {remaining_value:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
@@ -400,6 +416,8 @@ def open_tco_page(scrollable_frame, var_manager):
         total_cost_per_km = total_cost_yearly / akm
         print(f"Total Cost of Ownership per km (not discounted): {total_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
+        r = daily_range
+
         # Fixed charging cost per km
         charger_cost_per_km = cic_km
         label_charger_cost_km.config(text=f"{charger_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
@@ -424,7 +442,7 @@ def open_tco_page(scrollable_frame, var_manager):
         label_total_monthly.config(text=f"{total_cost_monthly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
         label_total_yearly.config(text=f"{total_cost_yearly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
-        label_total_TCO.config(text=f"{TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        label_total_TCO.config(text=f"{TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
         label_total_TCO_per_km.config(text=f"{TCO_KM:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
 

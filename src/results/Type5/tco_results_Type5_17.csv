@@ -1,21 +1,21 @@
 Category,Value
 Type,Distribution (diesel)
-Daily Driving Distance,161.55181806600422
-Annual Kilometers Driven,35541.39997452093
+Daily Driving Distance,51.97764080328321
+Annual Kilometers Driven,11435.080976722305
 Public Fast Charging Ratio,1
-Daily Range,2328.454321506616
+Daily Range,3273.7125964245583
 Daily Battery Capacity,800
-Daily Time,5.963636363636364
-Charger Cost per km,5.1536334164526165
+Daily Time,7.4363636363636365
+Charger Cost per km,3.054635892876385
 Maintenance Cost per km,1.4
-Driver Cost per km,12.547305404955733
-Road Tax per km,0.2432093278879489
-Truck Financing Cost per km,5.379104588094394
+Driver Cost per km,48.62898663612182
+Road Tax per km,0.7559194392760368
+Truck Financing Cost per km,14.087964765982138
 Battery Financing Cost per km,0.0
-Total Cost per km,24.48004340950274
-Total Cost per month,72504.58451756433
-Total Cost per year,870055.014210772
-TCO,4475939.189699557
-TCO per km,17.99084686312818
+Total Cost per km,67.17158729498034
+Total Cost per month,64009.37833775595
+Total Cost per year,768112.5400530715
+TCO,3815396.4799086843
+TCO per km,47.665306533158216
 Battery Replacements,0.0
 Battery Replacement Cost,0

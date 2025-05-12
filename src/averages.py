@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 from collections import defaultdict
 
-input_folder = Path("results")  # Replace with your actual path
+input_folder = Path("src/results")  # Replace with your actual path
 output_folder = Path("averages")
 output_folder.mkdir(exist_ok=True)
 

@@ -18,29 +18,15 @@ def monte_carlo_sampling(num_days, type, max_range):
     # Create a dedicated generator instance
     rng = np.random.default_rng()
 
-    """
     params = {
-        1: (160, 40),    # Distribution
-        2: (320, 80),    # Regional Distribution
-        3: (500, 120),   # Long-range traffic
-        4: (720, 180),   # Nomadic
-        5: (160, 40),    # Distribution(diesel)
-        6: (320, 80),    # Regional Distribution(diesel)
-        7: (500, 120),   # Long-range traffic(diesel)
-        8: (720, 180),   # Nomadic (diesel)
-    }
-
-    """
-
-    params = {
-        1: (67, 7),    # Distribution
-        2: (137, 9),    # Regional Distribution
-        3: (284, 10),   # Long-range traffic
-        4: (554, 11),   # Nomadic
-        5: (67, 7),    # Distribution(diesel)
-        6: (137, 9),    # Regional Distribution(diesel)
-        7: (284, 10),   # Long-range traffic(diesel)
-        8: (554, 11),   # Nomadic (diesel)
+        1: (52, 6),    # Distribution
+        2: (110, 8),    # Regional Distribution
+        3: (238, 10),   # Long-range traffic
+        4: (507, 11),   # Nomadic
+        5: (52, 6),    # Distribution(diesel)
+        6: (110, 9),    # Regional Distribution(diesel)
+        7: (284, 8),   # Long-range traffic(diesel)
+        8: (507, 11),   # Nomadic (diesel)
     }
     if type not in params:
         raise ValueError("Invalid type. Must be 1, 2, 3, or 4.")
