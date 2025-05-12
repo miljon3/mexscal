@@ -46,25 +46,16 @@ def monte_carlo_sampling(num_days, type, max_range):
     daily_stops = np.ceil(daily_distances / max_range) - 1
     daily_stops = np.clip(daily_stops, 0, None).astype(int)
 
-    # TODO: Check hour calculation logic
-    """ Maximum possible hours is 9 per day, except in type 3 and 4 where it is 10 (Technically its 10 hours maximum two times per week, but we use 10 hours for simplicity) """
-    """ However the average speed will vary depending on type of driving"""
-    """ For example, for type 1/5, the average speed is 25 km/h, so 9 hours = 225 km"""
-    """ For type 2/6, the average speed is 40 km/h, so 9 hours = 360 km"""
-    """ For type 3/7, the average speed is 60 km/h, so 10 hours = 600 km"""
-    """ For type 4/8, the average speed is 70 km/h, so 10 hours = 700 km"""
-    """ As long as the distance is equal or more than the average speed, we assume that the truck was driven for 9 or 10 hours"""
-    """ If it is less, we check if the truck was driven for 8 hours, then 7 hours, etc."""
-    # Define max hours and speed per type
+    # Estimate the number of hours driven based on recorded average speeds of a day
     type_info = {
-        1: (9, 25),
-        2: (9, 40),
-        3: (9, 60),
-        4: (9, 70),
-        5: (9, 25),
-        6: (9, 40),
-        7: (9, 60),
-        8: (9, 70)
+        1: (9, 6.5),
+        2: (9, 14),
+        3: (9, 30),
+        4: (9, 64),
+        5: (9, 6.5),
+        6: (9, 14),
+        7: (9, 30),
+        8: (9, 64)
     }
 
     max_hours, avg_speed = type_info[type]
