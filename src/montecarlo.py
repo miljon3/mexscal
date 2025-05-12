@@ -1,10 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-""" Uncomment to test the function """
-#simulated_data = monte_carlo_sampling(num_days=250, type=4, max_range=372)
-#animate(simulated_data)
-#summary_statistics(simulated_data)
 
 def monte_carlo_sampling(num_days, type, max_range):
     """
@@ -22,7 +18,7 @@ def monte_carlo_sampling(num_days, type, max_range):
     # Create a dedicated generator instance
     rng = np.random.default_rng()
 
-    # TODO: Check these numbers and add input for them
+    """
     params = {
         1: (160, 40),    # Distribution
         2: (320, 80),    # Regional Distribution
@@ -34,6 +30,18 @@ def monte_carlo_sampling(num_days, type, max_range):
         8: (720, 180),   # Nomadic (diesel)
     }
 
+    """
+
+    params = {
+        1: (67, 7),    # Distribution
+        2: (137, 9),    # Regional Distribution
+        3: (284, 10),   # Long-range traffic
+        4: (554, 11),   # Nomadic
+        5: (67, 7),    # Distribution(diesel)
+        6: (137, 9),    # Regional Distribution(diesel)
+        7: (284, 10),   # Long-range traffic(diesel)
+        8: (554, 11),   # Nomadic (diesel)
+    }
     if type not in params:
         raise ValueError("Invalid type. Must be 1, 2, 3, or 4.")
 
@@ -134,3 +142,6 @@ def return_totals(simulated_data):
 
 
 
+#simulated_data = monte_carlo_sampling(num_days=250, type=4, max_range=372)
+#animate(simulated_data)
+#summary_statistics(simulated_data)

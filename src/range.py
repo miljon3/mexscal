@@ -1,4 +1,48 @@
-import math 
+import math
+
+typedict = {
+            1: {
+                "name": "Distribution",
+                "weight": "18",
+                "fuel": "Electric"
+            },
+            2: {
+                "name": "Regional Distribution",
+                "weight": "18",
+                "fuel": "Electric"
+            },
+            3: {
+                "name": "Long Range Traffic",
+                "weight": "42",
+                "fuel": "Electric"
+            },
+            4: {
+                "name": "Nomadic",
+                "weight": "72",
+                "fuel": "Electric"
+            },
+            5: {
+                "name": "Distribution (diesel)",
+                "weight": "18",
+                "fuel": "Diesel"
+            },
+            6: {
+                "name": "Regional Distribution (diesel)",
+                "weight": "18",
+                "fuel": "Diesel"
+            },
+            7: {
+                "name": "Long Range Traffic (diesel)",
+                "weight": "42",
+                "fuel": "Diesel"
+            },
+            8: {
+                "name": "Nomadic (diesel)",
+                "weight": "72",
+                "fuel": "Diesel"
+            }
+        }
+
 def calculate_daily_range(type, bc, type_dict):
     """
     Calculate the daily range based on consumption (r)
@@ -16,3 +60,19 @@ def calculate_daily_range(type, bc, type_dict):
         consumption = 0.3814*math.log(weight) -2.6735
         r = bc / consumption
     return r
+
+
+def calc_battery_size():
+    ### BATTERY SIZING CALCULATIONS
+    for i in range(50,2000):
+        r = calculate_daily_range(4, i, type_dict=typedict)
+        if r*0.8 > 554.24:
+            print(i)
+            break
+
+calc_battery_size()
+
+# type 1, average distance is 66.8 km, result = 89 kWh
+# type 2, average distance is 137.36 km, result = 183 kWh
+# type 3, average distance is 283.61 km, result = 492 kWh
+# type 4, average distance is 554.24 km, result = 1104 kWh

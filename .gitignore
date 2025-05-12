@@ -1,3 +1,5 @@
 .vscode
 __pycache__
 *.pyc
+route_data/Comb_plate_data.csv
+route_data/plates.txt
