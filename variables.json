@@ -70,7 +70,7 @@
         "unit":"%"
     },
     "type":{
-        "value":8.0,
+        "value":6.0,
         "name":"Type of usage",
         "unit":"1\/2\/3\/4"
     },

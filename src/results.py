@@ -72,7 +72,7 @@ def open_stats_page(root, var_manager):
     """
 
     # Load and analyze
-    base_folder = "/Users/carllavo/Desktop/MEX/mexscal/src/results"
+    base_folder = "src/results"
     df_raw = merge_csvs_per_type(base_folder)
     df = preprocess(df_raw)
 
@@ -88,4 +88,3 @@ def open_stats_page(root, var_manager):
     compare_key_metrics(df, key_metrics)
     # Show the tradeoff plot
     plot_tradeoff(df, "TCO", "Annual Kilometers Driven")
-

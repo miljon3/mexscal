@@ -236,10 +236,15 @@ def open_tco_page(scrollable_frame, var_manager):
     label_battery_replacements.grid(row=10, column=1, padx=10, pady=2)
 
 
-    def calculate_and_display_cic():
+    def calculate_and_display_cic(result_generate_mode = False, type = None, subsidy = None):
+        if result_generate_mode:
+            type = type
+            subsidy = subsidy
+        else: 
+            type = var_manager.variables["type"]["value"]
+            type = int(type)
+            subsidy = var_manager.variables["subsidy"]["value"]
         """ Variables """
-        type = var_manager.variables["type"]["value"]
-        type = int(type)
         #pfcr = var_manager.variables["pfcr"]["value"]
         #dcr = var_manager.variables["dcr"]["value"]
         cost_driver_hourly = var_manager.variables["cost_driver_hourly"]["value"]
@@ -254,7 +259,6 @@ def open_tco_page(scrollable_frame, var_manager):
         battery_cost_per_kWh = var_manager.variables["battery_cost_per_kWh"]["value"]
         lifespan = var_manager.variables["lifespan"]["value"]
         interest_rate = var_manager.variables["interest_rate"]["value"]
-        subsidy = var_manager.variables["subsidy"]["value"]
         chinco = var_manager.variables["chinco"]["value"]
         chutra = var_manager.variables["chutra"]["value"]
         eprice = var_manager.variables["eprice"]["value"]
@@ -328,7 +332,7 @@ def open_tco_page(scrollable_frame, var_manager):
             y3tax = dy3tax
             y4tax = dy4tax
 
-        cic_km = calculate_cic_km(pfcr, dcr, daily_battery_capacity, ccph_fast, ccph_depot, daily_range)
+        cic_km, e_price_km = calculate_cic_km(pfcr, dcr, daily_battery_capacity, ccph_fast, ccph_depot, daily_range, eprice)
         cic = cic_km * akm
         print(f"Total Charging Infrastructure Cost: {cic:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
@@ -341,7 +345,14 @@ def open_tco_page(scrollable_frame, var_manager):
         driver_cost_yearly = calculate_driver_cost(total_hours, cost_driver_hourly)
         driver_cost_km = calculate_driver_cost_km(total_hours, cost_driver_hourly, akm)
 
-       
+        # Energy price
+        e_price_yearly = e_price_km * akm
+        diesel_price_yearly = 0
+        if type in range(5,9):
+            diesel_price_yearly = cic_km * akm
+            cic_km= 0
+            cic = 0
+            e_price_yearly = 0
 
         """ Financial Costs"""
         # TODO: Road tax
@@ -405,9 +416,10 @@ def open_tco_page(scrollable_frame, var_manager):
 
 
         # Totals
-        total_cost_yearly = cic + maintenance_cost + financing_cost + driver_cost_yearly + (total_battery_replacement_cost / lifespan)
+        total_cost_yearly = cic + e_price_yearly + diesel_price_yearly + maintenance_cost + financing_cost + driver_cost_yearly + (total_battery_replacement_cost / lifespan)
         ### TCO ###
         TCO = discount(total_cost_yearly, d, lifespan) + discounted_battery_cost - total_residual_value / ((1 + d) ** lifespan)
+        
         ### TCO ###
         print(f"Total Cost of Ownership: {TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
         TCO_KM = TCO / (akm * lifespan)
@@ -456,11 +468,28 @@ def open_tco_page(scrollable_frame, var_manager):
         label_days_driven_per_year.config(text=f"{yu:,.2f} days")
         label_annual_kilometers_driven.config(text=f"{akm:,.2f}".replace(",", " ").replace(".", ",") + " KM")
         label_battery_replacements.config(text=f"{battery_replacements:,.2f}")
+
+
+        ###
+        tco_components = {
+        'Maintenance': discount(maintenance_cost, d, lifespan) / TCO,
+        'Financing': discount(financing_cost, d, lifespan) / TCO,
+        'Driver': discount(driver_cost_yearly, d, lifespan) / TCO,
+        'ChargingInfrastructure': discount(cic, d, lifespan) / TCO,
+        'ElectrictyPrice': discount(e_price_yearly, d, lifespan) / TCO,
+        'DieselPrice': discount(diesel_price_yearly, d, lifespan) / TCO,
+        'BatteryReplacement': discounted_battery_cost / TCO,
+        'ResidualValue': - (total_residual_value / ((1 + d) ** lifespan)) / TCO
+        }
+
+        tco_components['Sum'] = sum(tco_components.values())
+
+        print(tco_components)
         
         # Export Type, Daily Driving Distance, Annual Kilometers Driven, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost, driver_cost_km, road_tax_km, truck_financing, battery_financing, total_cost_per_km, total_cost_monthly, total_cost_yearly
         df = pd.DataFrame({
-            "Category": ["Type", "Daily Driving Distance", "Annual Kilometers Driven", "Public Fast Charging Ratio", "Daily Range", "Daily Battery Capacity", "Daily Time", "Charger Cost per km", "Maintenance Cost per km", "Driver Cost per km", "Road Tax per km", "Truck Financing Cost per km", "Battery Financing Cost per km", "Total Cost per km", "Total Cost per month", "Total Cost per year", "TCO", "TCO per km", "Battery Replacements", "Battery Replacement Cost"],
-            "Value": [typedict[type]["name"], daily_drive, akm, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost / akm, driver_cost_km, road_tax / akm, truck_financing / akm, battery_financing / akm, total_cost_per_km, total_cost_monthly, total_cost_yearly, TCO, TCO_KM, battery_replacements, battery_replacement_cost]
+            "Category": ["Type", "Daily Driving Distance", "Annual Kilometers Driven", "Public Fast Charging Ratio", "Daily Range", "Daily Battery Capacity", "Daily Time", "Charger Cost per km", "Maintenance Cost per km", "Driver Cost per km", "Road Tax per km", "Truck Financing Cost per km", "Battery Financing Cost per km", "Total Cost per km", "Total Cost per month", "Total Cost per year", "TCO", "TCO per km", "Battery Replacements", "Battery Replacement Cost", "TCO_financing_frac", "TCO_maintenance_frac", "TCO_driver_frac", "TCO_battery_frac", "TCO_Charging_frac", "TCO_diesel_frac", "TCO_electricity_frac", "TCO_residual_frac"],
+            "Value": [typedict[type]["name"], daily_drive, akm, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost / akm, driver_cost_km, road_tax / akm, truck_financing / akm, battery_financing / akm, total_cost_per_km, total_cost_monthly, total_cost_yearly, TCO, TCO_KM, battery_replacements, battery_replacement_cost, tco_components["Financing"], tco_components["Maintenance"], tco_components["Driver"], tco_components["BatteryReplacement"], tco_components["ChargingInfrastructure"], tco_components["DieselPrice"], tco_components["ElectrictyPrice"], tco_components["ResidualValue"]]
         })
 
         # Save the results to a CSV file
@@ -475,8 +504,20 @@ def open_tco_page(scrollable_frame, var_manager):
     def calculate_50_times():
         for _ in range(50):
             calculate_and_display_cic()
+    
+    def generate_result():
+        for i in range(1,9):
+            for _in in range(50):
+                if (i in range(5,9)):
+                    s= 0
+                else:
+                    s = 0.25
+                calculate_and_display_cic(result_generate_mode=True, type = i, subsidy=s)
 
     calculate_button_50 = tk.Button(scrollable_frame, text="Calculate Costs 50 simulations", command=calculate_50_times)
-    calculate_button_50.pack(pady=10, anchor="n") 
+    calculate_button_50.pack(pady=10, anchor="n")
+
+    calculate_button_50_8 = tk.Button(scrollable_frame, text="Calculate Costs 50 simulations x 8 types", command=generate_result)
+    calculate_button_50_8.pack(pady=10, anchor="n")  
 
     
