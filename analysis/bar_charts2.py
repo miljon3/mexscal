@@ -105,6 +105,26 @@ for idx in range(len(labels)):
     else:
         ax.text(x[idx], opex[idx] + capex[idx] + residuals[idx] / 2, f"{res_pct:.0f}%", ha='center', va='center', fontsize=9, color="black")
 
+"""
+# Add TCO total labels above the bars
+for idx in range(len(labels)):
+    if tcos[idx] is None:
+        continue
+
+    total = opex[idx] + capex[idx] + residuals[idx]
+    ax.text(
+        x[idx], 
+        total + max(tcos) * 0.02,  # small offset for spacing
+        f"{tcos[idx]/1e6:.1f} Mkr",
+        ha='center',
+        va='bottom',
+        fontsize=10,
+        fontweight='bold',
+        color='black'
+    )
+"""
+
+
 # Formatting
 ax.set_xlabel("Vehicle Class")
 ax.set_ylabel("TCO [SEK]")

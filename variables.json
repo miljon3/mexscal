@@ -5,7 +5,11 @@
         "unit":"Kr\/h"
     },
     "lifespan":{
+<<<<<<< HEAD
         "value":7.0,
+=======
+        "value":8.0,
+>>>>>>> c34745a99446ef2bf4816657eafcc077b7671c92
         "name":"Lifespan",
         "unit":"years"
     },
