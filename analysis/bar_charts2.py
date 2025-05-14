@@ -105,6 +105,7 @@ for idx in range(len(labels)):
     else:
         ax.text(x[idx], opex[idx] + capex[idx] + residuals[idx] / 2, f"{res_pct:.0f}%", ha='center', va='center', fontsize=9, color="black")
 
+"""
 # Add TCO total labels above the bars
 for idx in range(len(labels)):
     if tcos[idx] is None:
@@ -121,7 +122,7 @@ for idx in range(len(labels)):
         fontweight='bold',
         color='black'
     )
-
+"""
 
 
 # Formatting

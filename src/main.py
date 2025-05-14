@@ -1,7 +1,7 @@
 import tkinter as tk
 from variables import VariableManager, open_variable_editor_in_main_window
 from tco import open_tco_page
-from results import open_stats_page
+#from results import open_stats_page
 
 root = tk.Tk()
 root.title("Main Application")
