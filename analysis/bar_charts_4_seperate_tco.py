@@ -31,6 +31,7 @@ for i in range(1, 9):
 
     # Read metadata
     with open(file_path, 'r') as f:
+        f.readline()
         type_line = f.readline().strip()
         vehicle_type = type_line.split(",", 1)[1]
 
@@ -125,6 +126,9 @@ for pair_idx in range(4):
     #plt.tight_layout() 
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: f"{x/1e6:.1f} Mkr"))
     ax.set_ylabel("TCO [Mkr]")
+
+    max_height = max([opex[i] + capex[i] + residuals[i] for i in range(2)])
+    ax.set_ylim(top=max_height * 1.2)
 
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
