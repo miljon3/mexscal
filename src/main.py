@@ -1,7 +1,6 @@
 import tkinter as tk
 from variables import VariableManager, open_variable_editor_in_main_window
 from tco import open_tco_page
-from results import open_stats_page
 
 root = tk.Tk()
 root.title("Main Application")
@@ -20,8 +19,6 @@ def display_content(content_type):
         open_variable_editor_in_main_window(content_frame, var_manager)
     elif content_type == "tco":
         open_tco_page(content_frame, var_manager)
-    elif content_type == "stats":
-        open_stats_page(content_frame, var_manager)
 
 menu_frame = tk.Frame(root, width=100, height=300)
 menu_frame.pack(side="left", fill="y", padx=(10, 0))
@@ -42,9 +39,6 @@ menu_button2.pack(fill="x", pady=5)
 
 menu_button3 = tk.Button(menu_frame, text="TCO", command=lambda: display_content("tco"))
 menu_button3.pack(fill="x", pady=5)
-
-menu_button4 = tk.Button(menu_frame, text="Show Stats", command=lambda: display_content("stats"))
-menu_button4.pack(fill="x", pady=5)
 
 menu_button5 = tk.Button(menu_frame, text="Exit", command=root.quit)
 menu_button5.pack(fill="x", pady=5)

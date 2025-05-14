@@ -488,8 +488,29 @@ def open_tco_page(scrollable_frame, var_manager):
         
         # Export Type, Daily Driving Distance, Annual Kilometers Driven, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost, driver_cost_km, road_tax_km, truck_financing, battery_financing, total_cost_per_km, total_cost_monthly, total_cost_yearly
         df = pd.DataFrame({
-            "Category": ["Type", "Daily Driving Distance", "Annual Kilometers Driven", "Public Fast Charging Ratio", "Daily Range", "Daily Battery Capacity", "Daily Time", "Charger Cost per km", "Maintenance Cost per km", "Driver Cost per km", "Road Tax per km", "Truck Financing Cost per km", "Battery Financing Cost per km", "Total Cost per km", "Total Cost per month", "Total Cost per year", "TCO", "TCO per km", "Battery Replacements", "Battery Replacement Cost", "TCO_financing_frac", "TCO_maintenance_frac", "TCO_driver_frac", "TCO_battery_frac", "TCO_Charging_frac", "TCO_diesel_frac", "TCO_electricity_frac", "TCO_residual_frac", "Lifespan"],
-            "Value": [typedict[type]["name"], daily_drive, akm, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost / akm, driver_cost_km, road_tax / akm, truck_financing / akm, battery_financing / akm, total_cost_per_km, total_cost_monthly, total_cost_yearly, TCO, TCO_KM, battery_replacements, battery_replacement_cost, tco_components["Financing"], tco_components["Maintenance"], tco_components["Driver"], tco_components["BatteryReplacement"], tco_components["ChargingInfrastructure"], tco_components["DieselPrice"], tco_components["ElectrictyPrice"], tco_components["ResidualValue"], lifespan]
+            "Category": [
+                "Type", "Truckname", "Daily Driving Distance", "Annual Kilometers Driven",
+                "Public Fast Charging Ratio", "Daily Range", "Daily Battery Capacity",
+                "Daily Time", "Charger Cost per km", "Maintenance Cost per km",
+                "Driver Cost per km", "Road Tax per km", "Truck Financing Cost per km",
+                "Battery Financing Cost per km", "Total Cost per km", "Total Cost per month",
+                "Total Cost per year", "TCO", "TCO per km", "Battery Replacements",
+                "Battery Replacement Cost", "TCO_financing_frac", "TCO_maintenance_frac",
+                "TCO_driver_frac", "TCO_battery_frac", "TCO_Charging_frac", "TCO_diesel_frac",
+                "TCO_electricity_frac", "TCO_residual_frac", "Lifespan"
+            ],
+            "Value": [
+                type, typedict[type]["name"], daily_drive, akm, pfcr, daily_range,
+                daily_battery_capacity, daily_time, charger_cost_per_km,
+                maintenance_cost / akm, driver_cost_km, road_tax / akm,
+                truck_financing / akm, battery_financing / akm, total_cost_per_km,
+                total_cost_monthly, total_cost_yearly, TCO, TCO_KM, battery_replacements,
+                battery_replacement_cost, tco_components["Financing"],
+                tco_components["Maintenance"], tco_components["Driver"],
+                tco_components["BatteryReplacement"], tco_components["ChargingInfrastructure"],
+                tco_components["DieselPrice"], tco_components["ElectrictyPrice"],
+                tco_components["ResidualValue"], lifespan
+            ]
         })
 
         # Save the results to a CSV file
@@ -518,6 +539,4 @@ def open_tco_page(scrollable_frame, var_manager):
     calculate_button_50.pack(pady=10, anchor="n")
 
     calculate_button_50_8 = tk.Button(scrollable_frame, text="Calculate Costs 50 simulations x 8 types", command=generate_result)
-    calculate_button_50_8.pack(pady=10, anchor="n")  
-
-    
+    calculate_button_50_8.pack(pady=10, anchor="n")
