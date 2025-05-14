@@ -13,56 +13,56 @@ from discount import discount
 
 typedict = {
             1: {
-                "name": "Distribution",
+                "name": "Electric 18t 180kwh",
                 "weight": "18",
                 "fuel": "Electric",
                 "power": "200",
                 "capacity": "180"
             },
             2: {
-                "name": "Regional Distribution",
+                "name": "Electric 18t 250kwh",
                 "weight": "18",
                 "fuel": "Electric",
                 "power": "200",
                 "capacity": "250",
             },
             3: {
-                "name": "Long Range Traffic",
+                "name": "Electric 42t 550kwh",
                 "weight": "42",
                 "fuel": "Electric",
                 "power": "350",
                 "capacity": "550",
             },
             4: {
-                "name": "Nomadic",
+                "name": "Electric 72t 550kwh",
                 "weight": "72",
                 "fuel": "Electric",
                 "power": "550",
                 "capacity": "550",
             },
             5: {
-                "name": "Distribution (diesel)",
+                "name": "Diesel 18t (1)",
                 "weight": "18",
                 "fuel": "Diesel",
                 "power": "200",
                 "capacity": "180",
             },
             6: {
-                "name": "Regional Distribution (diesel)",
+                "name": "Diesel 18t (2)",
                 "weight": "18",
                 "fuel": "Diesel",
                 "power": "200",
                 "capacity": "250",
             },
             7: {
-                "name": "Long Range Traffic (diesel)",
+                "name": "Diesel 42t",
                 "weight": "42",
                 "fuel": "Diesel",
                 "power": "350",
                 "capacity": "550",
             },
             8: {
-                "name": "Nomadic (diesel)",
+                "name": "Diesel 72t",
                 "weight": "72",
                 "fuel": "Diesel",
                 "power": "550",
@@ -456,6 +456,10 @@ def open_tco_page(scrollable_frame, var_manager):
         label_days_driven_per_year.config(text=f"{yu:,.2f} days")
         label_annual_kilometers_driven.config(text=f"{akm:,.2f}".replace(",", " ").replace(".", ",") + " KM")
         label_battery_replacements.config(text=f"{battery_replacements:,.2f}")
+
+        # Change the type to the info of the type
+        # Create a string with the type name and variables
+
         
         # Export Type, Daily Driving Distance, Annual Kilometers Driven, pfcr, daily_range, daily_battery_capacity, daily_time, charger_cost_per_km, maintenance_cost, driver_cost_km, road_tax_km, truck_financing, battery_financing, total_cost_per_km, total_cost_monthly, total_cost_yearly
         df = pd.DataFrame({

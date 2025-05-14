@@ -1,21 +1,22 @@
 Category,Value
-Type,Nomadic (diesel)
-Daily Driving Distance,507.203591781777
-Annual Kilometers Driven,111584.79019199093
+Type,Diesel 72t
+Daily Driving Distance,507.24434950391594
+Annual Kilometers Driven,111593.7568908615
 Public Fast Charging Ratio,1
 Daily Range,2164.7759697758133
 Daily Battery Capacity,800
-Daily Time,7.359090909090909
+Daily Time,7.318181818181818
 Charger Cost per km,4.619415652990463
-Maintenance Cost per km,0.9799999999999999
-Driver Cost per km,4.931658688009057
-Road Tax per km,0.07746575483206337
-Truck Financing Cost per km,0.7219017377003697
+Maintenance Cost per km,0.98
+Driver Cost per km,4.9038495991778355
+Road Tax per km,0.07745953036112779
+Truck Financing Cost per km,0.38696108449277106
 Battery Financing Cost per km,0.0
-Total Cost per km,11.25297607869989
-Total Cost per month,104638.41456476833
-Total Cost per year,1255660.97477722
-TCO,6639553.879776263
-TCO per km,8.500331411466634
+Total Cost per km,10.89022633666107
+Total Cost per month,101273.43919165106
+Total Cost per year,1215281.2702998128
+TCO,11456801.027534368
+TCO per km,6.416578168626348
 Battery Replacements,0.0
 Battery Replacement Cost,0
+Lifespan,16.0

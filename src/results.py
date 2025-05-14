@@ -76,16 +76,66 @@ def open_stats_page(root, var_manager):
     df_raw = merge_csvs_per_type(base_folder)
     df = preprocess(df_raw)
 
-    key_metrics = [
-        "TCO", "TCO_km",
-        "Annual Kilometers Driven"
-    ]
-    key_metrics = [m for m in key_metrics if m in df.columns]
-    for widget in root.winfo_children():
-        widget.destroy()
-
-    # Show the compare_key_metrics plot
-    compare_key_metrics(df, key_metrics)
     # Show the tradeoff plot
-    plot_tradeoff(df, "TCO", "Annual Kilometers Driven")
+    plot_tradeoff(df, "Lifespan", "TCO per km")
+
+def plot_tradeoff(df, x_metric, y_metric):
+    x_metric = x_metric.strip()
+    y_metric = y_metric.strip()
+
+    # Define color by drivetrain
+    color_mapping = {
+        "Type1": "green", "Type2": "green", "Type3": "green", "Type4": "green",
+        "Type5": "grey",  "Type6": "grey",  "Type7": "grey",  "Type8": "grey"
+    }
+
+    # Define class labels
+    type_to_class = {
+        "Type1": "Class1", "Type5": "Class1",
+        "Type2": "Class2", "Type6": "Class2",
+        "Type3": "Class3", "Type7": "Class3",
+        "Type4": "Class4", "Type8": "Class4",
+    }
+
+    df["Class"] = df["Type"].map(type_to_class)
+
+    plt.figure(figsize=(10, 7))
+    sns.set(style="whitegrid")
+
+    # Scatter plot
+    ax = sns.scatterplot(
+        data=df,
+        x=x_metric,
+        y=y_metric,
+        hue="Type",
+        palette=color_mapping,
+        s=120,
+        edgecolor="black",
+        linewidth=0.5,
+        legend=False
+    )
+
+    # Find cluster centers and add labels
+    centers = df.groupby("Class")[[x_metric, y_metric]].mean().reset_index()
+
+    for _, row in centers.iterrows():
+        plt.text(
+            row[x_metric] + 1,
+            row[y_metric] + 1,
+            row["Class"],
+            fontsize=11,
+            weight="bold",
+            ha="center",
+            va="bottom",
+            color="black",
+        )
+
+    plt.title(f"Tradeoff: {x_metric} vs. {y_metric}", fontsize=16, weight='bold', pad=15)
+    plt.xlabel(x_metric, fontsize=14)
+    plt.ylabel(y_metric, fontsize=14)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.show()
 
