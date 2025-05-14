@@ -29,11 +29,12 @@ def calculate_ccph_depot(cpkwh, eprice):
     if cpkwh == 0:
         raise ValueError("Cost per kWh for depot chargers must be greater than 0.")
     
-    ccph_depot = cpkwh + eprice
+    # ccph_depot = cpkwh + eprice
+    ccph_depot = cpkwh
     return ccph_depot
 
 
-def calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_depot, r):
+def calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_depot, r, e_price):
     """
     Calculate the charging infrastructure cost per kilometre (CIC_KM)
     :param pfcr: Fraction of energy charged at public fast chargers
@@ -50,11 +51,15 @@ def calculate_cic_km(pfcr, dcr, bc, ccph_fast, ccph_depot, r):
     # TODO: Evaluate if bcd should be used
     cic_fast_km = (bc * ccph_fast) / r
     cic_slow_km = (bc * ccph_depot) / r
+
+    # e_price
+    e_price_km = (bc * e_price) / r
+
     print(f"Charging Infrastructure Cost per km (Fast): {cic_fast_km:.2f} SEK/km")
     print(f"Charging Infrastructure Cost per km (Depot): {cic_slow_km:.2f} SEK/km")
     
     cic_km = pfcr * cic_fast_km + dcr * cic_slow_km
-    return cic_km
+    return cic_km, e_price_km
 
 def calculate_cycles(r, km, cd):
     """

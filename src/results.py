@@ -72,7 +72,7 @@ def open_stats_page(root, var_manager):
     """
 
     # Load and analyze
-    base_folder = "/Users/carllavo/Desktop/MEX/mexscal/src/results"
+    base_folder = "src/results"
     df_raw = merge_csvs_per_type(base_folder)
     df = preprocess(df_raw)
 
@@ -138,4 +138,3 @@ def plot_tradeoff(df, x_metric, y_metric):
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
     plt.show()
-
