@@ -29,6 +29,14 @@ opex_keys = [
     ("TCO_electricity_frac", "#B2912F")
 ]
 
+opex_keys_without_driver = [
+    ("TCO_maintenance_frac", "#C1C1C1"),
+    ("TCO_battery_frac", "#937860"),
+    ("TCO_Charging_frac", "#64B5CD"),
+    ("TCO_diesel_frac", "#DA8BC3"),
+    ("TCO_electricity_frac", "#B2912F")
+]
+
 opex_components = {key: [] for key, _ in opex_keys}
 
 for i in range(1, 9):
@@ -37,8 +45,17 @@ for i in range(1, 9):
     if not os.path.exists(file_path):
         print(f"❌ File not found: {file_path}")
         continue
+    
+    with open(file_path, 'r') as f:
+        f.readline()
+        type_line = f.readline().strip()
+        vehicle_type = type_line.split(",", 1)[1]
 
+    # Read and clean data
     df = pd.read_csv(file_path, skiprows=1, names=["Category", "Average Value"])
+    df["Average Value"] = pd.to_numeric(df["Average Value"], errors="coerce")
+
+    # df = pd.read_csv(file_path, skiprows=1, names=["Category", "Average Value"])
 
     try:
         tco = df.loc[df["Category"] == "TCO", "Average Value"].values[0]
@@ -50,10 +67,18 @@ for i in range(1, 9):
             opex_components[key].append(tco * frac)
 
         # Label
-        if i in range(5, 9):
-            labels.append(f"Class {i}\n(Diesel)")
+        if i == 5:
+            class_number = 1
+        elif i == 6:
+            class_number = 2
+        elif i == 7:
+            class_number = 3
+        elif i == 8:
+            class_number = 4
         else:
-            labels.append(f"Class {i}\n(Electric)")
+            class_number = i
+        if i in range(1,9): 
+            labels.append(f"Class {class_number} \n {vehicle_type}")
 
     except IndexError as e:
         print(f"⚠️ Missing data in {file_name}: {e}")

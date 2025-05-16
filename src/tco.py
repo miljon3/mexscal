@@ -497,7 +497,7 @@ def open_tco_page(scrollable_frame, var_manager):
                 "Total Cost per year", "TCO", "TCO per km", "Battery Replacements",
                 "Battery Replacement Cost", "TCO_financing_frac", "TCO_maintenance_frac",
                 "TCO_driver_frac", "TCO_battery_frac", "TCO_Charging_frac", "TCO_diesel_frac",
-                "TCO_electricity_frac", "TCO_residual_frac", "Lifespan"
+                "TCO_electricity_frac", "TCO_residual_frac", "Lifespan", "subsidy"
             ],
             "Value": [
                 type, typedict[type]["name"], daily_drive, akm, pfcr, daily_range,
@@ -509,7 +509,7 @@ def open_tco_page(scrollable_frame, var_manager):
                 tco_components["Maintenance"], tco_components["Driver"],
                 tco_components["BatteryReplacement"], tco_components["ChargingInfrastructure"],
                 tco_components["DieselPrice"], tco_components["ElectrictyPrice"],
-                tco_components["ResidualValue"], lifespan
+                tco_components["ResidualValue"], lifespan, subsidy
             ]
         })
 

@@ -24,11 +24,31 @@ for i in range(1, 9):
     if not os.path.exists(file_path):
         print(f"❌ File not found: {file_path}")
         continue
+    with open(file_path, 'r') as f:
+        f.readline()
+        type_line = f.readline().strip()
+        vehicle_type = type_line.split(",", 1)[1]
     df = pd.read_csv(file_path, skiprows=1, names=["Category", "Average Value"])
+
     try:
-        value = df.loc[df["Category"] == "TCO per km", "Average Value"].values[0]
+        value_str = df.loc[df["Category"] == "TCO per km", "Average Value"].values[0]
+        try:
+            value = float(value_str.replace(",", "").strip())
+        except ValueError:
+            print(f"⚠️ Could not convert value '{value_str}' to float in {file_name}")
+            value = None
         tco_per_km.append(value)
-        labels.append(f"Class {i}")
+        if i == 5:
+            class_number = 1
+        elif i == 6:
+            class_number = 2
+        elif i == 7:
+            class_number = 3
+        elif i == 8:
+            class_number = 4
+        else:
+            class_number = i
+        labels.append(f"Class {class_number}")
     except IndexError:
         print(f"⚠️ 'TCO per km' not found in {file_name}")
         tco_per_km.append(None)
@@ -91,7 +111,7 @@ ax_top.set_title("Total Cost of Ownership (TCO) per km by Vehicle Class")
 
 # X-ticks and class pair labels
 ax_bottom.set_xticks(range(len(pairs)))
-ax_bottom.set_xticklabels([f"{labels[a]} & {labels[b]}" for a, b in pairs])
+ax_bottom.set_xticklabels([f"{labels[a]}" for a, b in pairs])
 
 # Legend
 ax_top.legend(["Electric Powertrain", "Diesel Powertrain"], loc="upper right", frameon=False)

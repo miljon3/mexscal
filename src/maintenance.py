@@ -10,7 +10,7 @@ def calculate_maintenance_cost(mcpkm, tire_factor, akm, type):
     if type in range(1,5):
         return mcpkm *(1+tire_factor*0.2)* akm * 0.7
     else:
-        return mcpkm *(1+tire_factor*0.2)* akm * 0.7
+        return mcpkm *(1+tire_factor*0.2)* akm
 
 def maintenance_per_km(mcpkm, type):
     """

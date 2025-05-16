@@ -52,7 +52,18 @@ for i in range(1, 9):
         capex_val = tco * fin_frac
         opex_val = tco * opex_frac
         res_val = tco * res_frac
-        label = f"Class {i} \n ({vehicle_type})"
+        if i == 5:
+            class_number = 1
+        elif i == 6:
+            class_number = 2
+        elif i == 7:
+            class_number = 3
+        elif i == 8:
+            class_number = 4
+        else:
+            class_number = i
+        label = f"Class {class_number} \n ({vehicle_type})"
+
 
         all_data.append({
             "label": label,
@@ -109,17 +120,19 @@ for pair_idx in range(4):
             ax.text(x[idx], residuals[idx] - total * 0.02, f"{res_pct:.0f}%", ha='center', va='top', fontsize=9, color="black")
         else:
             ax.text(x[idx], opex[idx] + capex[idx] + residuals[idx] / 2, f"{res_pct:.0f}%", ha='center', va='center', fontsize=9, color="black")
+    
     for idx in range(2):
+        top = opex[idx] + capex[idx]
         ax.text(
             x[idx], 
-            opex[idx] + capex[idx] + residuals[idx] + total * 0.1,  # Slight offset above the bar
+            top + 0.02*top,
             f"{tcos[idx]/1e6:.2f} Mkr", 
             ha='center', va='bottom', fontsize=10, fontweight='bold'
         )
     # Formatting
     ax.set_xlabel("Vehicle Class")
     ax.set_ylabel("TCO [SEK]")
-    ax.set_title(f"TCO Breakdown: Class {pair_idx+1} (Electric) vs Class {pair_idx+5} (Diesel)")
+    ax.set_title(f"TCO Breakdown: Class {pair_idx+1} (Electric) vs Class {pair_idx+1} (Diesel)")
     ax.set_xticks(list(x))
     ax.set_xticklabels(labels)
     ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0), frameon=False)

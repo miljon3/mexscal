@@ -17,7 +17,7 @@ for file in input_folder.rglob("tco_results_Type*.csv"):
         df = pd.read_csv(file)
 
         # Extract Type label
-        type_row = df.loc[df["Category"] == "Type", "Value"].values
+        type_row = df.loc[df["Category"] == "Truckname", "Value"].values
         if len(type_row) > 0:
             type_labels[type_number].append(type_row[0])
 
