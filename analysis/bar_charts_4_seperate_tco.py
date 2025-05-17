@@ -18,8 +18,7 @@ plt.rcParams.update({
 
 folder_path = "averages"
 
-# Read and organize data
-# Read and organize data
+
 all_data = []
 for i in range(1, 9):
     file_name = f"averaged_results_type_{i}.csv"

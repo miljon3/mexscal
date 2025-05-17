@@ -35,7 +35,7 @@
         "unit":"%"
     },
     "subsidy":{
-        "value":0.0,
+        "value":0.25,
         "name":"Subsidy",
         "unit":"%"
     },
@@ -60,7 +60,7 @@
         "unit":""
     },
     "bcls":{
-        "value":4000.0,
+        "value":2000.0,
         "name":"Battery Cycle Lifespan",
         "unit":"Cycles"
     },
@@ -70,7 +70,7 @@
         "unit":"%"
     },
     "type":{
-        "value":6.0,
+        "value":1.0,
         "name":"Type of usage",
         "unit":"1\/2\/3\/4"
     },

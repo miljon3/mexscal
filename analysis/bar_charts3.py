@@ -29,7 +29,7 @@ opex_keys = [
     ("TCO_electricity_frac", "#B2912F")
 ]
 
-opex_keys_without_driver = [
+opex_keys_ = [
     ("TCO_maintenance_frac", "#C1C1C1"),
     ("TCO_battery_frac", "#937860"),
     ("TCO_Charging_frac", "#64B5CD"),
@@ -123,7 +123,7 @@ for key, color in opex_keys:
 # Axis & Legend
 ax.set_ylabel("Vehicle Class")
 ax.set_xlabel("OPEX [Mkr]")
-ax.set_title("OPEX Breakdown by Vehicle Class")
+ax.set_title("OPEX Breakdown by Vehicle Class (excluding driver)")
 ax.set_yticks(y)
 ax.set_yticklabels(labels)
 ax.legend(loc="lower right", frameon=False)  # Legend at the bottom-right corner

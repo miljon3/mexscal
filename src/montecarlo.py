@@ -25,7 +25,7 @@ def monte_carlo_sampling(num_days, type, max_range):
         4: (507, 11),   # Nomadic
         5: (52, 6),    # Distribution(diesel)
         6: (110, 9),    # Regional Distribution(diesel)
-        7: (284, 8),   # Long-range traffic(diesel)
+        7: (238, 10),   # Long-range traffic(diesel)
         8: (507, 11),   # Nomadic (diesel)
     }
     if type not in params:

@@ -17,6 +17,7 @@ plt.rcParams.update({
 folder_path = "averages"
 tco_per_km = []
 labels = []
+driving_distance = []
 
 for i in range(1, 9):
     file_name = f"averaged_results_type_{i}.csv"
@@ -48,7 +49,9 @@ for i in range(1, 9):
             class_number = 4
         else:
             class_number = i
-        labels.append(f"Class {class_number}")
+        print(vehicle_type)
+        labels.append(f"{vehicle_type}")
+        driving_distance.append(df.loc[df["Category"] == "Daily Driving Distance", "Average Value"].values[0])
     except IndexError:
         print(f"⚠️ 'TCO per km' not found in {file_name}")
         tco_per_km.append(None)
@@ -105,13 +108,12 @@ ax_top.plot([0, 1], [0, 0], transform=ax_top.transAxes, **kwargs)
 ax_bottom.plot([0, 1], [1, 1], transform=ax_bottom.transAxes, **kwargs)
 
 # Labels & title
-ax_bottom.set_xlabel("Class Pairs")
 fig.supylabel("TCO per km [SEK/km]", fontsize=12)
 ax_top.set_title("Total Cost of Ownership (TCO) per km by Vehicle Class")
 
 # X-ticks and class pair labels
 ax_bottom.set_xticks(range(len(pairs)))
-ax_bottom.set_xticklabels([f"{labels[a]}" for a, b in pairs])
+ax_bottom.set_xticklabels([f"{labels[a]} \n {labels[b]} \n {float(driving_distance[a]):,.1f} km/day" for a, b in pairs])
 
 # Legend
 ax_top.legend(["Electric Powertrain", "Diesel Powertrain"], loc="upper right", frameon=False)

@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import pandas as pd
 from exporter import save_results_to_csv
 from charging import calculate_cic_km, calculate_charger_costs, calculate_ccph_depot, calculate_cycles
@@ -10,6 +11,7 @@ from routes import calculate_driver_cost, calculate_driver_cost_km
 from depreciation import residual_value
 from range import calculate_daily_range
 from discount import discount
+import threading
 
 typedict = {
             1: {
@@ -70,6 +72,10 @@ typedict = {
             }
         }
 
+simulated_data_dict = {
+    1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None
+}
+
 def open_tco_page(scrollable_frame, var_manager):
     for widget in scrollable_frame.winfo_children():
         widget.destroy()
@@ -81,7 +87,10 @@ def open_tco_page(scrollable_frame, var_manager):
 
     def _on_mousewheel(event):
     # For MacOS, delta values are small so multiply by 1 (or higher if needed)
-        canvas.yview_scroll(int(-1 * (event.delta*3)), "units")
+        try:
+            canvas.yview_scroll(int(-1 * (event.delta*3)), "units")
+        except Exception as e:
+            pass
 
     scrollable_frame.bind(
         "<Configure>",
@@ -236,14 +245,27 @@ def open_tco_page(scrollable_frame, var_manager):
     label_battery_replacements.grid(row=10, column=1, padx=10, pady=2)
 
 
-    def calculate_and_display_cic(result_generate_mode = False, type = None, subsidy = None):
+    def calculate_and_display_cic(result_generate_mode = False, type = None, subsidy = None, lifespan=None, subsidy_mode=False):
         if result_generate_mode:
             type = type
             subsidy = subsidy
+            subsidy_export = subsidy
+            lifespan = lifespan
+            if type in range(5,9) and subsidy_mode:
+                subsidy_export = subsidy
+                subsidy = 0
+            if lifespan is None:
+                lifespan = var_manager.variables["lifespan"]["value"]
+            if subsidy is None:
+                subsidy = var_manager.variables["subsidy"]["value"]
         else: 
             type = var_manager.variables["type"]["value"]
             type = int(type)
             subsidy = var_manager.variables["subsidy"]["value"]
+            if type in range(5,9):
+                subsidy = 0
+            lifespan = var_manager.variables["lifespan"]["value"]
+            subsidy_export = subsidy
         """ Variables """
         #pfcr = var_manager.variables["pfcr"]["value"]
         #dcr = var_manager.variables["dcr"]["value"]
@@ -257,7 +279,7 @@ def open_tco_page(scrollable_frame, var_manager):
         mckpm = var_manager.variables["mcpkm"]["value"]
         tire_factor = var_manager.variables["tire_factor"]["value"]
         battery_cost_per_kWh = var_manager.variables["battery_cost_per_kWh"]["value"]
-        lifespan = var_manager.variables["lifespan"]["value"]
+        # lifespan = var_manager.variables["lifespan"]["value"]
         interest_rate = var_manager.variables["interest_rate"]["value"]
         chinco = var_manager.variables["chinco"]["value"]
         chutra = var_manager.variables["chutra"]["value"]
@@ -289,7 +311,15 @@ def open_tco_page(scrollable_frame, var_manager):
             battery_cost_per_kWh = 0
         daily_range = calculate_daily_range(type, bc, typedict)
         daily_battery_capacity = bc * bcd
-        simulated_data = monte_carlo_sampling(yu, type, daily_range)
+        if result_generate_mode:
+            if simulated_data_dict[int(type)] is not None:
+                simulated_data = simulated_data_dict[int(type)]
+            else:
+                simulated_data = monte_carlo_sampling(yu, type, daily_range)
+                simulated_data_dict[int(type)] = simulated_data
+        else:
+            simulated_data = monte_carlo_sampling(yu, type, daily_range)
+        # animate(simulated_data)
         """ Animation """
         #animate(simulated_data)
         # Calculate the total distance driven and the number of charging stops
@@ -319,10 +349,11 @@ def open_tco_page(scrollable_frame, var_manager):
         # TODO: Add separate presentation of tax costs involved in the charging costs
         cic_installation = calculate_charger_costs(chinco, chutra, lifespan, daily_battery_capacity, yu)
         ccph_depot = calculate_ccph_depot(cic_installation, eprice)
+        ccph_fast = ccph_fast - eprice
         # Added check for nomadic driving.
         if type == 4:
             ccph_depot = 0
-            eprice = 0
+            #eprice = 0
         # Or if type is 5,6,7,8. Change to the diesel variables
         elif type in [5, 6, 7, 8]:
             ccph_depot = 0
@@ -346,6 +377,7 @@ def open_tco_page(scrollable_frame, var_manager):
         driver_cost_km = calculate_driver_cost_km(total_hours, cost_driver_hourly, akm)
 
         # Energy price
+        print(e_price_km)
         e_price_yearly = e_price_km * akm
         diesel_price_yearly = 0
         if type in range(5,9):
@@ -414,7 +446,8 @@ def open_tco_page(scrollable_frame, var_manager):
                 replacement_year = i * lifespan / (battery_replacements + 1)
                 discounted_battery_cost += battery_replacement_cost / ((1 + d) ** replacement_year)
 
-
+        print(discounted_battery_cost)
+        discounted_battery_cost = 0
         # Totals
         total_cost_yearly = cic + e_price_yearly + diesel_price_yearly + maintenance_cost + financing_cost + driver_cost_yearly + (total_battery_replacement_cost / lifespan)
         ### TCO ###
@@ -429,45 +462,47 @@ def open_tco_page(scrollable_frame, var_manager):
         print(f"Total Cost of Ownership per km (not discounted): {total_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
         r = daily_range
-
-        # Fixed charging cost per km
         charger_cost_per_km = cic_km
-        label_charger_cost_km.config(text=f"{charger_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
-        label_energy_price_km.config(text=f"{(bc * eprice) / r:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+        if not result_generate_mode:
 
-        label_maintenance_km.config(text=f"{maintenance_cost / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
-        label_maintenance_monthly.config(text=f"{maintenance_cost / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
-        label_maintenance_yearly.config(text=f"{maintenance_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            # Fixed charging cost per km
+            
+            label_charger_cost_km.config(text=f"{charger_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+            label_energy_price_km.config(text=f"{(bc * eprice) / r:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
-        label_driver_km.config(text=f"{driver_cost_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
-        label_driver_monthly.config(text=f"{driver_cost_yearly / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
-        label_driver_yearly.config(text=f"{driver_cost_yearly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_maintenance_km.config(text=f"{maintenance_cost / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+            label_maintenance_monthly.config(text=f"{maintenance_cost / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_maintenance_yearly.config(text=f"{maintenance_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
-        label_road_tax_km.config(text=f"{road_tax / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
-        label_road_tax_monthly.config(text=f"{road_tax / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
-        label_road_tax_yearly.config(text=f"{road_tax:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_driver_km.config(text=f"{driver_cost_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+            label_driver_monthly.config(text=f"{driver_cost_yearly / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_driver_yearly.config(text=f"{driver_cost_yearly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
-        label_financial_truck_km.config(text=f"{truck_financing / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
-        label_financial_battery_km.config(text=f"{battery_financing / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+            label_road_tax_km.config(text=f"{road_tax / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+            label_road_tax_monthly.config(text=f"{road_tax / 12:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_road_tax_yearly.config(text=f"{road_tax:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
 
-        label_total_per_km.config(text=f"{total_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
-        label_total_monthly.config(text=f"{total_cost_monthly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
-        label_total_yearly.config(text=f"{total_cost_yearly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_financial_truck_km.config(text=f"{truck_financing / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+            label_financial_battery_km.config(text=f"{battery_financing / akm:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
-        label_total_TCO.config(text=f"{TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
-        label_total_TCO_per_km.config(text=f"{TCO_KM:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+            label_total_per_km.config(text=f"{total_cost_per_km:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
+            label_total_monthly.config(text=f"{total_cost_monthly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_total_yearly.config(text=f"{total_cost_yearly:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+
+            label_total_TCO.config(text=f"{TCO:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_total_TCO_per_km.config(text=f"{TCO_KM:,.2f}".replace(",", " ").replace(".", ",") + " SEK/KM")
 
 
-        """ Display the key assumptions """
-        label_battery_cost.config(text=f"{battery_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
-        label_battery_capacity.config(text=f"{bc:,.2f} kWh")
-        label_daily_range.config(text=f"{daily_range:,.2f} km")
-        label_truck_cost.config(text=f"{truck_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
-        label_daily_driving_distance.config(text=f"{daily_drive:,.2f} km")
-        label_daily_driving_time.config(text=f"{daily_time:,.2f} hours")
-        label_days_driven_per_year.config(text=f"{yu:,.2f} days")
-        label_annual_kilometers_driven.config(text=f"{akm:,.2f}".replace(",", " ").replace(".", ",") + " KM")
-        label_battery_replacements.config(text=f"{battery_replacements:,.2f}")
+            """ Display the key assumptions """
+            label_battery_cost.config(text=f"{battery_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_battery_capacity.config(text=f"{bc:,.2f} kWh")
+            label_daily_range.config(text=f"{daily_range:,.2f} km")
+            label_truck_cost.config(text=f"{truck_cost:,.2f}".replace(",", " ").replace(".", ",") + " SEK")
+            label_daily_driving_distance.config(text=f"{daily_drive:,.2f} km")
+            label_daily_driving_time.config(text=f"{daily_time:,.2f} hours")
+            label_days_driven_per_year.config(text=f"{yu:,.2f} days")
+            label_annual_kilometers_driven.config(text=f"{akm:,.2f}".replace(",", " ").replace(".", ",") + " KM")
+            label_battery_replacements.config(text=f"{battery_replacements:,.2f}")
 
 
         ###
@@ -497,7 +532,7 @@ def open_tco_page(scrollable_frame, var_manager):
                 "Total Cost per year", "TCO", "TCO per km", "Battery Replacements",
                 "Battery Replacement Cost", "TCO_financing_frac", "TCO_maintenance_frac",
                 "TCO_driver_frac", "TCO_battery_frac", "TCO_Charging_frac", "TCO_diesel_frac",
-                "TCO_electricity_frac", "TCO_residual_frac", "Lifespan", "subsidy"
+                "TCO_electricity_frac", "TCO_residual_frac", "Lifespan", "subsidy", "LFC"
             ],
             "Value": [
                 type, typedict[type]["name"], daily_drive, akm, pfcr, daily_range,
@@ -509,13 +544,49 @@ def open_tco_page(scrollable_frame, var_manager):
                 tco_components["Maintenance"], tco_components["Driver"],
                 tco_components["BatteryReplacement"], tco_components["ChargingInfrastructure"],
                 tco_components["DieselPrice"], tco_components["ElectrictyPrice"],
-                tco_components["ResidualValue"], lifespan, subsidy
+                tco_components["ResidualValue"], lifespan, subsidy_export, bcls
             ]
         })
 
         # Save the results to a CSV file
         type = int(type)
         save_results_to_csv(df, type)
+
+
+
+    def run_with_spinner(task_func, label_text="Beräknar... Vänligen vänta.", insert_before=None):
+        spinner_frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+        spinner_index = [0]
+        running = [True]
+
+        status_label = tk.Label(scrollable_frame, text=label_text)
+        spinner_label = tk.Label(scrollable_frame, font=('Courier', 14))
+
+        # Insert directly before a given widget (like the calculate button)
+        if insert_before:
+            status_label.pack(pady=5, before=insert_before)
+            spinner_label.pack(pady=5, before=insert_before)
+        else:
+            status_label.pack(pady=5)
+            spinner_label.pack(pady=5)
+
+        def animate_spinner():
+            if not running[0]:
+                return
+            spinner_label.config(text=spinner_frames[spinner_index[0]])
+            spinner_index[0] = (spinner_index[0] + 1) % len(spinner_frames)
+            scrollable_frame.after(100, animate_spinner)
+
+        animate_spinner()
+
+        def wrapper():
+            task_func()
+            running[0] = False
+            spinner_label.destroy()
+            status_label.config(text="Done!")
+
+        threading.Thread(target=wrapper, daemon=True).start()
+
 
 
 
@@ -527,16 +598,48 @@ def open_tco_page(scrollable_frame, var_manager):
             calculate_and_display_cic()
     
     def generate_result():
-        for i in range(1,9):
-            for _in in range(50):
-                if (i in range(5,9)):
-                    s= 0
-                else:
-                    s = 0.25
-                calculate_and_display_cic(result_generate_mode=True, type = i, subsidy=s)
+        def task():
+            for i in range(1,9):
+                for _in in range(50):
+                    if (i in range(5,9)):
+                        s= 0
+                    else:
+                        s = 0.25
+                    calculate_and_display_cic(result_generate_mode=True, type = i, subsidy=s, lifespan=None)
+        run_with_spinner(task, label_text="Calculating...", insert_before=calculate_button)
+    
+    def generate_results_lifespans():
+        def task():
+            for k in range(3,17):
+                for i in range(1,9):
+                    for _in in range(50):
+                        s = 0 if i in range(5,9) else None
+                        print(k)
+                        calculate_and_display_cic(result_generate_mode=True, type=i, subsidy=s, lifespan=k)
+        #threading.Thread(target=task, daemon=True).start()
+        run_with_spinner(task, label_text="Calculating...", insert_before=calculate_button)
+
+    def generate_results_subsidies():
+        def task():
+            for k in range(0,25):
+                for i in range(1,9):
+                    for _in in range(50):
+                        if k !=0:
+                            s = k/100
+                        else:
+                            s=k
+                        calculate_and_display_cic(result_generate_mode=True, type = i, subsidy=s, lifespan=None, subsidy_mode=True)
+        run_with_spinner(task, label_text="Calculating...", insert_before=calculate_button)
 
     calculate_button_50 = tk.Button(scrollable_frame, text="Calculate Costs 50 simulations", command=calculate_50_times)
     calculate_button_50.pack(pady=10, anchor="n")
 
     calculate_button_50_8 = tk.Button(scrollable_frame, text="Calculate Costs 50 simulations x 8 types", command=generate_result)
     calculate_button_50_8.pack(pady=10, anchor="n")
+
+    calculate_button_50_lifespan = tk.Button(scrollable_frame, text="Calculate Costs x 8 types x 3-16 years analysis periods", command=generate_results_lifespans)
+    calculate_button_50_lifespan.pack(pady=10, anchor="n")
+
+    calculate_button_50_lifespan = tk.Button(scrollable_frame, text="Calculate Costs x 8 types x 0-25% BET Subsidy", command=generate_results_subsidies)
+    calculate_button_50_lifespan.pack(pady=10, anchor="n")
+
